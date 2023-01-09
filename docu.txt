@@ -1,0 +1,25 @@
+cambiar a produccion:
+
+API:
+PruebaControlador.cs: 35 public static string servidor_boletas = "apicert";
+		      36 public static string servidor_facturas = "maullin";
+		      692 string respuestaPing = checkPing("palena.sii.cl");
+		      693 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
+
+ENVIODTE:
+EnvioSobreDTE.asmx.cs: 246 string pUrl = "https://palena.sii.cl/cgi_dte/UPL/DTEUpload";
+ConsultaMaullin.cs: 29 [System.Web.Services.WebServiceBindingAttribute(Name="QueryEstUpSoapBinding", Namespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws")]
+		    42 	 this.Url = "https://palena.sii.cl/DTEWS/QueryEstUp.jws";
+		    58   [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws", ResponseNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws")]
+		    97 [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws", ResponseNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws")]
+                    136 [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws", ResponseNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws")]
+  		    175 [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws", ResponseNamespace="https://palena.sii.cl/DTEWS/QueryEstUp.jws")]
+              	       
+GetSeedMaullin.cs: 28  [System.Web.Services.WebServiceBindingAttribute(Name="CrSeedSoapBinding", Namespace="https://palena.sii.cl/DTEWS/CrSeed.jws")]
+		   37 this.Url = "https://palena.sii.cl/DTEWS/CrSeed.jws";
+		   44 [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace="https://palena.sii.cl/DTEWS/CrSeed.jws", ResponseNamespace="https://palena.sii.cl/DTEWS/CrSeed.jws")]
+
+GetTokenFromSeedServiceMaullin.cs: 27 [System.Web.Services.WebServiceBindingAttribute(Name = "GetTokenFromSeedSoapBinding", Namespace = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws")]
+				   38  this.Url = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws";
+				   48 [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws", ResponseNamespace = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws")]
+				   95  [System.Web.Services.Protocols.SoapRpcMethodAttribute("", RequestNamespace = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws", ResponseNamespace = "https://palena.sii.cl/DTEWS/GetTokenFromSeed.jws")]

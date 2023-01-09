@@ -5,7 +5,6 @@ C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.runtimeconfig.json
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.runtimeconfig.dev.json
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.dll
-C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ref\ApiAgroDTE.dll
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.pdb
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.Views.dll
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\ApiAgroDTE.Views.pdb
@@ -18,7 +17,6 @@ C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\ApiAgroDTE
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\ApiAgroDTE.RazorAssemblyInfo.cache
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\ApiAgroDTE.RazorAssemblyInfo.cs
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\ApiAgroDTE.StaticWebAssets.Manifest.cache
-C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\ApiAgroDTE.StaticWebAssets.xml
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\scopedcss\bundle\ApiAgroDTE.styles.css
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\ApiAgroDTE.TagHelpers.input.cache
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\ApiAgroDTE.TagHelpers.output.cache
@@ -67,3 +65,9 @@ C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\MySql.Data
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\Renci.SshNet.dll
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\SshNet.Security.Cryptography.dll
 C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\bin\Debug\net5.0\System.Xml.XPath.XmlDocument.dll
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\ApiAgroDTE.StaticWebAssets.Pack.cache
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\msbuild.ApiAgroDTE.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\msbuild.build.ApiAgroDTE.props
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\msbuild.buildMultiTargeting.ApiAgroDTE.props
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\staticwebassets\msbuild.buildTransitive.ApiAgroDTE.props
+C:\Users\Benjamin\source\repos\ApiAgroDTE\ApiAgroDTE\obj\Debug\net5.0\refint\ApiAgroDTE.dll
