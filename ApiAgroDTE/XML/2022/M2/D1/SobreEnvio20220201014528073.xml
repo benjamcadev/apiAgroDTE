@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<EnvioDTE>
+<SetDTE ID="SetDoc">
+<Caratula version="1.0">
+<RutEmisor>76958430-7</RutEmisor>
+<RutEnvia>6402678-K</RutEnvia>
+<RutReceptor>60803000-K</RutReceptor>
+<FchResol>2014-08-18</FchResol>
+<NroResol>0</NroResol>
+<TmstFirmaEnv>2022-02-01T13:45:28</TmstFirmaEnv>
+<SubTotDTE>
+<TpoDTE>61</TpoDTE>
+<NroDTE>1</NroDTE>
+</SubTotDTE>
+</Caratula>
+</SetDTE>
+</EnvioDTE>

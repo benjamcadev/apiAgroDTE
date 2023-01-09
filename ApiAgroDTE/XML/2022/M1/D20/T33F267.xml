@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<DTE version="1.0">
+<Documento ID="T33F267">
+<Encabezado>
+<IdDoc>
+<TipoDTE>33</TipoDTE>
+<Folio>267</Folio>
+<FchEmis>2022-01-14</FchEmis>
+<TpoTranCompra>1</TpoTranCompra>
+<TpoTranVenta>1</TpoTranVenta>
+<FmaPago>2</FmaPago>
+</IdDoc>
+<Emisor>
+<RUTEmisor>76958430-7</RUTEmisor>
+<RznSoc>AGROPLASTIC</RznSoc>
+<GiroEmis>IMPORTADORA Y COMERCIALIZADORA</GiroEmis>
+<Acteco>46900</Acteco>
+<DirOrigen>VICENTE ZORRILLA 835</DirOrigen>
+<CmnaOrigen>LA SERENA</CmnaOrigen>
+</Emisor>
+<Receptor>
+<RUTRecep>76430498-5</RUTRecep>
+<RznSocRecep>HOSTY SPA</RznSocRecep>
+<GiroRecep>ACTIVIDADES DE CONSULTORIA DE INFORMATIC</GiroRecep>
+<DirRecep>ARTURO PRAT 527 3 pis OF 1</DirRecep>
+<CmnaRecep>Curicó</CmnaRecep>
+</Receptor>
+<Totales>
+<MntNeto>7056</MntNeto>
+<TasaIVA>19</TasaIVA>
+<IVA>1341</IVA>
+<MntTotal>8397</MntTotal>
+</Totales>
+</Encabezado>
+<Detalle>
+<NroLinDet>1</NroLinDet>
+<CdgItem>
+<TpoCodigo>INT1</TpoCodigo>
+<VlrCodigo>Arriendo</VlrCodigo>
+</CdgItem>

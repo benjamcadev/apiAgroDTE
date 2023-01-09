@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<DTE version="1.0">
+<Documento ID="T33F219">
+<Encabezado>
+<IdDoc>
+<TipoDTE>33</TipoDTE>
+<Folio>219</Folio>
+<FchEmis>2022-01-04</FchEmis>
+<TpoTranCompra>1</TpoTranCompra>
+<TpoTranVenta>1</TpoTranVenta>
+<FmaPago>2</FmaPago>
+</IdDoc>
+<Emisor>
+<RUTEmisor>76958430-7</RUTEmisor>
+<RznSoc>AGROPLASTIC</RznSoc>
+<GiroEmis>IMPORTADORA Y COMERCIALIZADORA</GiroEmis>
+<Acteco>46900</Acteco>
+<DirOrigen>VICENTE ZORRILLA 835</DirOrigen>
+<CmnaOrigen>LA SERENA</CmnaOrigen>
+</Emisor>
+<Receptor>
+<RUTRecep>76430498-5</RUTRecep>
+<RznSocRecep>HOSTY SPA</RznSocRecep>
+<GiroRecep>ACTIVIDADES DE CONSULTORIA DE INFORMATIC</GiroRecep>
+<DirRecep>ARTURO PRAT 527 3 pis OF 1</DirRecep>
+<CmnaRecep>Curicó</CmnaRecep>
+</Receptor>
+<Totales>
+<MntNeto>3690</MntNeto>
+<TasaIVA>19</TasaIVA>
+<IVA>701</IVA>
+<MntTotal>4391</MntTotal>
+</Totales>
+</Encabezado>
+<Detalle>
+<NroLinDet>1</NroLinDet>
+<NmbItem>item</NmbItem>
+<QtyItem>1</QtyItem>
+<PrcItem>2000</PrcItem>
+<MontoItem>2000</MontoItem>
+</Detalle>
+<Detalle>
+<NroLinDet>2</NroLinDet>
+<NmbItem>item2</NmbItem>
+<QtyItem>1</QtyItem>
+<PrcItem>2000</PrcItem>
+<MontoItem>2000</MontoItem>
+</Detalle>
+<DscRcgGlobal>
+<NroLinDR>1</NroLinDR>
+<TpoMov>R</TpoMov>
+<GlosaDR>Es un recargo por que si</GlosaDR>
+<TpoValor>$</TpoValor>
+<ValorDR>100</ValorDR>
+</DscRcgGlobal>
+<DscRcgGlobal>
+<NroLinDR>2</NroLinDR>
+<TpoMov>D</TpoMov>
+<GlosaDR>Es un descuento por que si</GlosaDR>
+<TpoValor>%</TpoValor>
+<ValorDR>10</ValorDR>
+</DscRcgGlobal>
+<Referencia>
+<NroLinRef>1</NroLinRef>
+<TpoDocRef>801</TpoDocRef>
+<FolioRef>1057439-PRUEBA</FolioRef>
+<FchRef>2022-01-05</FchRef>
+<RazonRef>Trazabilidad</RazonRef>
+</Referencia>
+<TED version="1.0">
+<DD>
+<RE>76958430-7</RE>
+<TD>33</TD>
+<F>219</F>
+<FE>2022-01-04</FE>
+<RR>76430498-5</RR>
+<RSR>HOSTY SPA</RSR>
+<MNT>4391</MNT>
+<IT1>item</IT1>
+<CAF version="1.0">
+<DA>
+<RE>76958430-7</RE>
+<RS>IMP COMERCIALIZADORA Y DIST AGROPLASTIC</RS>
+<TD>33</TD>
+<RNG>
+<D>201</D>
+<H>300</H>
+</RNG>
+<FA>2021-11-15</FA>
+<RSAPK>
+<M>vJbO6ySglnqJheTfopFlRnOTAKp1bM8aPg5XxM4RECcQlEqdjEmtmzA/pXCF1sL+ukxCNGOeCgc1QdIg6xmaTQ==</M>
+<E>Aw==</E>
+</RSAPK>
+<IDK>100</IDK>
+</DA>
+<FRMA algoritmo="SHA1withRSA">gTblqz4TEYzxAZoeDPFoHmPu7HQNuCHelf/08Lt+4pKgrlQvYqNZheYO4eKauBA6MengrD3NXPVmKyNjyuyChQ==</FRMA>
+</CAF>
+<TSTED>2022-01-10T15:28:59</TSTED>
+</DD>
+<FRMT algoritmo="SHA1withRSA">sGBAmR84SQX73uKrhvR1nktsQcvNHonpXGfpjCNY1lgAiIPzUwsq9FYa0Q4W0O0b9d+dcj0gcYZIskVXEr4YAw==</FRMT>
+</TED>
+<TmstFirma>2022-01-10T15:28:59</TmstFirma>
+</Documento>
+</DTE>

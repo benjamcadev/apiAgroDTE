@@ -1,0 +1,75 @@
+{
+                        "response": [
+                            "TOKEN",
+                            "XML",
+                            "TIMBRE",
+                            "FOLIO",
+                            "RESOLUCION"
+                        ],
+                        "dte": {
+                            "Encabezado": {
+                                "IdDoc": {
+                                    "TipoDTE": 33,
+                                    "Folio": 1,
+                                    "FchEmis": "2022-04-22",
+                                    "TpoTranCompra": 1,
+                                    "TpoTranVenta": 1,
+                                    "FmaPago": 2,
+                                    "Comentario": null
+                                },
+                                "Emisor": {
+                                    "RUTEmisor": "76958430-7",
+                                    "RznSoc": "IMPORTADORA COMERCIALIZADORA Y DISTRIBUIDORA AGROPLASTIC LTDA",
+                                    "GiroEmis": "VENTA AL POR MAYOR NO ESPECIALIZADA",
+                                    "Acteco": 469000,
+                                    "DirOrigen": "VICENTE ZORRILLA 835",
+                                    "CmnaOrigen": "La Serena",
+                                    "CdgSIISucur": "74236823"
+                                },
+                                "Receptor": {
+                                    "RUTRecep": "18709007-5",
+                                    "RznSocRecep": "BENJAMIN MIGUEL CORTES ALVAREZ",
+                                    "GiroRecep": "ACTIVIDADES DE PROGRAMACION INFORMATICA",
+                                    "DirRecep": "COLONIAL 2680 B 208 CONDOMINIO NOVA",
+                                    "CmnaRecep": "La Serena"
+                                },
+                                "Totales": {
+                                    "MntNeto": 48825,
+                                    "TasaIVA": 19,
+                                    "IVA": 9277,
+                                    "MntTotal": 58102
+                                }
+                            },
+                            "Detalle": [
+                                {
+                                    "NroLinDet": 1,
+                                    "NmbItem": "TONER 1102w HP",
+                                    "QtyItem": "3.000",
+                                    "PrcItem": "4621.85",
+                                    "MontoItem": 13866
+                                },
+                                {
+                                    "NroLinDet": 2,
+                                    "NmbItem": "BOLSA PAPEL 5KL.X 100UN SQK0500 PQXC5",
+                                    "QtyItem": "10.000",
+                                    "PrcItem": "3198.32",
+                                    "MontoItem": 31983
+                                },
+                                {
+                                    "NroLinDet": 3,
+                                    "NmbItem": "MANJAR NESTLE 1KG UXC12 12111270",
+                                    "QtyItem": "1.000",
+                                    "PrcItem": "2976.47",
+                                    "MontoItem": 2976
+                                }
+                            ],
+                            "Referencia": {
+                                "NroLinRef": 1,
+                                "TpoDocRef": 801,
+                                "FolioRef": "123456-informatica",
+                                "RUTOtr": "18709007-5",
+                                "FchRef": "2022-04-22",
+                                "RazonRef": "Trazabilidad con OC cliente"
+                            }
+                        }
+                    }
