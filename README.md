@@ -6,6 +6,11 @@ api que permite realizar la comunicacion y generacion de archivos para facturaci
 Para produccion se utiliza el servidor "palena" (Facturas) y "api" O "rahue" (boletas)  
 Para certificacion se utiliza el servidor "maullin" (Facturas) y "apicert" (boletas)
 
+Se deben obtener los CAF de produccion o certificacion
+
+en shemas.cs y envioDTE.cs localhost:90 (Si esta montado en el server) localhost.81 (si esta en local)
+
+
 ## SE DEBEN CAMBIAR LAS LINEAS DE CODIGO
 PruebaControlador.cs:  
 * 35 public static string servidor_boletas = "apicert";  
@@ -17,4 +22,6 @@ EnvioDTE.cs
 * 374 var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");
 * 385 request.AddHeader("Host", "rahue.sii.cl"); 
 * 476 var client = new RestClient("https://api.sii.cl/recursos/v1/");
+
+
 
