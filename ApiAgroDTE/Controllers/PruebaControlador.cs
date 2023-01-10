@@ -582,8 +582,9 @@ namespace ApiAgroDTE.Controllers
                                 using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\request.txt"))
                                 {
                                     writetext.WriteLine(archivostr);
-                                }                                
+                                } 
 
+                               
                                 //VALIDAMOS QUE VENGA EN EL JSON 'dte'
                                 if (!values.TryGetProperty("dte", out var dte_content))
                                 {
