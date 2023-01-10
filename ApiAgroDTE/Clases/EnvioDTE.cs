@@ -473,7 +473,7 @@ namespace ApiAgroDTE.Clases
                 //NO EXISTE TOKEN ACTIVO, SE PIDE UNO
                 //OBTENER SEMILLA
                
-                var client = new RestClient("https://api.sii.cl/recursos/v1/");
+                var client = new RestClient("https://apicert.sii.cl/recursos/v1/");
                 var request = new RestRequest("boleta.electronica.semilla", Method.GET);
                 var response = client.Execute(request);
 
@@ -630,7 +630,8 @@ namespace ApiAgroDTE.Clases
         {
 
             //WebRequest request = WebRequest.Create("https://localhost:44327/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
-            WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
+            //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
+            WebRequest request = WebRequest.Create("http://localhost:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
             request.Method = "GET";
             WebResponse response = request.GetResponse();
             string respuestaEnvio = "";
