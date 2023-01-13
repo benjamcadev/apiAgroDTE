@@ -695,7 +695,8 @@ namespace ApiAgroDTE.Controllers
 
 
 
-                                        if (respuestaPing == respuestaConexion)
+                                        //if (respuestaPing == respuestaConexion)
+                                        if(respuestaPing == "Conexion Exitosa")
                                         {
                                             //EXISTE CONEXION, SOLICITAR SEMILLA, TOKEN Y ENVIAR SOBRE DTE
                                             EnvioDTE envio = new EnvioDTE();
