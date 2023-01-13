@@ -563,7 +563,7 @@ namespace ApiAgroDTE.Controllers
                             {
                                 //Console.WriteLine("Se esta procesando una request...");
                                 reader.Close();
-                                Thread.Sleep(500); //ESTO SIMULA EL TIEMPO QUE ESPERA LA PETICION DE UNA REQUEST QUE ESTA EN COLA
+                                Thread.Sleep(1000); //ESTO SIMULA EL TIEMPO QUE ESPERA LA PETICION DE UNA REQUEST QUE ESTA EN COLA
 
                                 r = false;
                                 break;
