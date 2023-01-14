@@ -4,7 +4,10 @@ api que permite realizar la comunicacion y generacion de archivos para facturaci
 
 ## IMPORTANTE
 Para produccion se utiliza el servidor "palena" (Facturas) y "api" O "rahue" (boletas)  
-Para certificacion se utiliza el servidor "maullin" (Facturas) y "apicert" o "pangal" (boletas)
+Para certificacion se utiliza el servidor "maullin" (Facturas) y "apicert" o "pangal" (boletas)+
+
+Para pedir token de boletas sirve "apicert" certificacion o "api" produccion
+Para el envio post de boletas sirve "pangal" certificacion y "rahue" produccion
 
 Se deben obtener los CAF de produccion o certificacion
 
