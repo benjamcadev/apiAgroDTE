@@ -51,7 +51,7 @@ namespace ApiAgroDTE
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    await context.Response.WriteAsync("Hellooou madafakKKKKKKKKKKKKKKKs");
+                    await context.Response.WriteAsync("API AgroDTE");
                 });
                 endpoints.MapControllers();
             });
