@@ -435,7 +435,11 @@ namespace ApiAgroDTE.Clases
                 else
                 {   
                     mensajeCorreo = "No se encontró el correo para enviar Acuse de recibo correspondiente, rut de destino: "+rutDestino;
-                    strCorreoDestino = "mriquelme@agroplastic.cl";
+                    //SI NO HAY CORREO ENVIAMOS A UNO POR DEFECTO
+                    strCorreoDestino = "agrodte@agroplastic.cl";
+                    //strCorreoDestino = "mriquelme@agroplastic.cl";
+
+
                 }
                
             }
@@ -446,12 +450,12 @@ namespace ApiAgroDTE.Clases
             }
             else
             {
-                strCorreoDestino = "mriquelme@agroplastic.cl";
+                //strCorreoDestino = "mriquelme@agroplastic.cl";
                 mensajeCorreo = mensaje;
 
             }           
 
-            strCorreoDestino = "mriquelme@agroplastic.cl"; // comentar para produccion     
+            //strCorreoDestino = "mriquelme@agroplastic.cl"; // comentar para produccion     
 
             try
             {
