@@ -447,6 +447,21 @@ namespace ApiAgroDTE.Clases
             else if(mensaje == "XML Cliente")
             {
                 asunto = "Entrega XML DTE Agroplastic";
+
+                List<string> listCorreoDestino = conexion.Select(query_correoDestino);
+                if (listCorreoDestino.Count != 0)
+                {
+                    strCorreoDestino = listCorreoDestino[0];
+                }
+                else
+                {
+                    mensajeCorreo = "No se encontró el correo para enviar Copia cliente correspondiente, rut de destino: " + rutDestino;
+                    //SI NO HAY CORREO ENVIAMOS A UNO POR DEFECTO
+                    strCorreoDestino = "agrodte@agroplastic.cl";
+                    //strCorreoDestino = "mriquelme@agroplastic.cl";
+
+
+                }
             }
             else
             {
