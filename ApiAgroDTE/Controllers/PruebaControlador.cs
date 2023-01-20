@@ -81,9 +81,501 @@ namespace ApiAgroDTE.Controllers
             return "los datos recbibidos son"+id+" - "+id2;
         }
 
-       
+        [HttpPost("api/dte/cargarXML")]
+        public ContentResult cargarXML([FromBody] JsonElement values)
+        {
+            /*{
+                   "datosCargarXML":{
+                                       "PathXML":""
+                   }
+           }*/
 
-        [HttpPost("api/dte/EmitirAcuseRecibo")]
+            //CREAR RESPUESTA
+            ContentResult respuesta = new ContentResult();
+
+            //VALIDAR QUE VENGAN DATOS
+            if (!values.TryGetProperty("datosCargarXML", out var json_content))
+            {
+                //SE TIENE QUE ENVIAR CON CODIGO 200 OK Y NO CON 500 PORQUE SI NO EN LA APP AUTOMATICA ENTRA AUTOMATICAMENTE EN CATCH EL CODIGO.
+                string JsonResponse = @"{""statusCode"": 500,""message"": ""ERROR: se necesita key 'datosCargarXML'""}";
+
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application/json";
+                respuesta.StatusCode = 200;
+
+                return respuesta;
+            }
+
+            //SACAMOS LOS DATOS DESDE EL JSON
+            JsonElement datosXML = values.GetProperty("datosCargarXML");
+            string pathXML = datosXML.GetProperty("PathXML").ToString();
+
+            XmlDocument xml_file = new XmlDocument();
+            xml_file.Load(pathXML);
+
+            var dte = xml_file.GetElementsByTagName("DTE");
+
+
+            //VALIDAR XML CON SCHEMA
+
+            string filename = pathXML;
+            string respuestaSchema = "";
+            string schemaFileName = schemaFileName = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Schemas\DTEs\EnvioDTE_v10.xsd";
+
+
+            try
+            {
+                string path_servicio_validar_xml = "";
+                path_servicio_validar_xml = "http://192.168.1.9:90/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + filename + "&schemaFilename=" + schemaFileName;
+              
+
+                WebRequest request = WebRequest.Create(path_servicio_validar_xml);
+                request.Method = "GET";
+                WebResponse response = request.GetResponse();
+
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    respuestaSchema = reader.ReadToEnd(); // do something fun...
+                }
+
+                //ESTA RESPUESTA ES UN XML PERO ES UN STRING, POR LO TANTO PARSEAMOS DE STRING A XML
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(respuestaSchema);
+
+                XmlNodeList elemlist = xmlDoc.GetElementsByTagName("string");
+                string resultadoSchema = elemlist[0].InnerXml;
+                string mensajeSchema = elemlist[1].InnerXml;
+
+                if (resultadoSchema == "False")
+                {
+                    string JsonResponse = @"{""statusCode"": 500,""message"": ""ERROR: HUBO UN ERROR DTE INVALIDO REVISADO POR SCHEMAS: " + mensajeSchema + @" ""}";
+
+                    respuesta.Content = JsonResponse;
+                    respuesta.ContentType = "application/json";
+                    respuesta.StatusCode = 200;
+                    return respuesta;
+                }
+
+                if (resultadoSchema == "True")
+                {
+                    //DESMENUZAR EL XML Y GUARDAR EN VARIABLES
+                    string tipo_dte = "";
+                    string folio = "";
+                    string fchemis = "";
+                    string rutemis = "";
+                    string rznsocemisor = "";
+                    string cmnaorigenemisor = "";
+                    string mnttotal = "";
+                    string detalles = "";
+                    string referencia_folio = "";
+                    string referencia_tipodte = "";
+                    string query = "";
+                    string rutrecep = "";
+
+                    for (int j = 0; j < dte.Count; j++)
+                    {
+                        bool errorDTE = false;
+
+                        XmlNode nodo_documento = dte[j].ChildNodes[0];
+
+                        if (nodo_documento.Name == "Documento")
+                        {
+                            for (int o = 0; o < nodo_documento.ChildNodes.Count; o++)
+                            {
+                                if (nodo_documento.ChildNodes[o].Name == "Encabezado")
+                                {
+                                    //BUSCAR ETIQUETAS DENTRO DEL <Encabezado>
+                                    var nodo_encabezado = nodo_documento.ChildNodes[o];
+
+                                    for (int p = 0; p < nodo_encabezado.ChildNodes.Count; p++)
+                                    {
+                                        //BUSCAR NODOS DENTRO DE <idDoc>
+                                        if (nodo_encabezado.ChildNodes[p].Name == "IdDoc")
+                                        {
+                                            var nodo_idDoc = nodo_encabezado.ChildNodes[p];
+
+                                            for (int u = 0; u < nodo_idDoc.ChildNodes.Count; u++)
+                                            {
+
+                                                if (nodo_idDoc.ChildNodes[u].Name == "TipoDTE")
+                                                {
+                                                    tipo_dte = nodo_idDoc.ChildNodes[u].InnerText;
+                                                }
+                                                else if (nodo_idDoc.ChildNodes[u].Name == "Folio")
+                                                {
+                                                    folio = nodo_idDoc.ChildNodes[u].InnerText;
+                                                }
+                                                else if (nodo_idDoc.ChildNodes[u].Name == "FchEmis")
+                                                {
+                                                    fchemis = nodo_idDoc.ChildNodes[u].InnerText;
+                                                }
+
+                                            }
+
+                                        }
+                                        //BUSCAR NODOS DENTRO DE <Emisor>
+                                        else if (nodo_encabezado.ChildNodes[p].Name == "Emisor")
+                                        {
+                                            var nodo_Emisor = nodo_encabezado.ChildNodes[p];
+
+                                            for (int m = 0; m < nodo_Emisor.ChildNodes.Count; m++)
+                                            {
+                                                if (nodo_Emisor.ChildNodes[m].Name == "RUTEmisor")
+                                                {
+                                                    rutemis = nodo_Emisor.ChildNodes[m].InnerText;
+                                                }
+                                                else if (nodo_Emisor.ChildNodes[m].Name == "RznSoc")
+                                                {
+                                                    rznsocemisor = nodo_Emisor.ChildNodes[m].InnerText;
+                                                }
+                                                else if (nodo_Emisor.ChildNodes[m].Name == "CmnaOrigen")
+                                                {
+                                                    cmnaorigenemisor = nodo_Emisor.ChildNodes[m].InnerText;
+                                                }
+                                            }
+                                        }
+                                        else if (nodo_encabezado.ChildNodes[p].Name == "Receptor")
+                                        {
+                                            var nodo_Receptor = nodo_encabezado.ChildNodes[p];
+                                            for (int r = 0; r < nodo_Receptor.ChildNodes.Count; r++)
+                                            {
+                                                if (nodo_Receptor.ChildNodes[r].Name == "RUTRecep")
+                                                {
+                                                    rutrecep = nodo_Receptor.ChildNodes[r].InnerText;
+
+                                                }
+                                            }
+
+                                        }
+
+                                        //BUSCAR NODOS DENTRO DE <Totales>
+                                        else if (nodo_encabezado.ChildNodes[p].Name == "Totales")
+                                        {
+                                            var nodo_Totales = nodo_encabezado.ChildNodes[p];
+
+                                            for (int m = 0; m < nodo_Totales.ChildNodes.Count; m++)
+                                            {
+                                                if (nodo_Totales.ChildNodes[m].Name == "MntTotal")
+                                                {
+                                                    mnttotal = nodo_Totales.ChildNodes[m].InnerText;
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                                //BUSCAR ETIQUETAS DENTRO DEL <Detalle>
+                                else if (nodo_documento.ChildNodes[o].Name == "Detalle")
+                                {
+                                    var nodo_detalle = nodo_documento.ChildNodes[o];
+                                    for (int e = 0; e < nodo_detalle.ChildNodes.Count; e++)
+                                    {
+                                        if (nodo_detalle.ChildNodes[e].Name == "NmbItem")
+                                        {
+                                            detalles = detalles + nodo_detalle.ChildNodes[e].InnerText + ";";
+                                        }
+                                    }
+
+                                }
+                                //BUSCAR ETIQUETAS DENTRO DEL <Referencia>
+                                else if (nodo_documento.ChildNodes[o].Name == "Referencia")
+                                {
+                                    var nodo_referencia = nodo_documento.ChildNodes[o];
+                                    for (int e = 0; e < nodo_referencia.ChildNodes.Count; e++)
+                                    {
+                                        if (nodo_referencia.ChildNodes[e].Name == "TpoDocRef")
+                                        {
+                                            referencia_tipodte = nodo_referencia.ChildNodes[e].InnerText;
+                                        }
+                                        else if (nodo_referencia.ChildNodes[e].Name == "FolioRef")
+                                        {
+                                            referencia_folio = nodo_referencia.ChildNodes[e].InnerText;
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //INSERTAR DTE DEPENDIENDO DEL TIPO
+
+                        //Eliminar el ultimo ; del detalle string
+                        if (detalles.Length == 0)
+                        {
+
+                        }
+                        else
+                        {
+                            detalles = detalles.Remove(detalles.Length - 1);
+                        }
+
+
+                        if (j == 0)
+                        {
+                            pathXML = pathXML.Replace("\\", "\\\\");
+                        }
+
+                        ConexionBD conexion = new ConexionBD();
+
+                        //INSERTAR EN ENVIO_DTE
+                        string query_envio_dte = "INSERT INTO envio_dte (trackid_envio_dte, estado_envio_dte, rutaxml_envio_dte, informados_envio_dte, aceptados_envio_dte, fecha_envio_dte, revision_envio_dte, envio_cliente_envio_dte, tipo_dte_envio_dte) VALUES (0, 'Enviado', '"+pathXML+"', 1, 1, '2023-01-20 13:22:06', 1, 1, '33');"
+
+                        switch (tipo_dte)
+                        {
+                            case "33":
+                                try
+                                {
+
+                                    string query_verificar = "SELECT folio_factura_compra FROM factura_compra WHERE folio_factura_compra = '" + folio + "' AND rutemis_factura_compra = '" + rutemis + "'";
+
+                                    List<string> lista_verificar = conexion.Select(query_verificar);
+                                    if (lista_verificar.Count == 0)
+                                    {
+                                        query = "INSERT INTO factura_compra (folio_factura_compra,uid_correo,fchemis_factura_compra,rutemis_factura_compra," +
+                                                                                                        "rznsocemis_factura_compra,cmnaorigen_factura_compra,mnttotal_factura_compra,detalle_factura_compra,folioref_factura_compra,tipo_dteref_factura_compra,ubicacion_factura_compra,estado_schema_factura_compra)" +
+                                                                                                        "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
+                                                                                                        " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + filePath + "','" + errorSchema + "')";
+
+                                        conexion.Consulta(query);
+                                        detalles = "";
+                                        respuestaDte.Add("RecepcionDTE-OK");
+                                    }
+                                    else
+                                    {
+                                        //AUMENTA EL CONTADOR
+                                        contador_repetidos_dte++;
+                                        if (!errorDTE)
+                                        {
+                                            respuestaDte.Add("RecepcionDTE-Repetido");
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+
+                                    }
+
+
+
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+
+                                }
+
+
+
+                                break;
+
+                            case "34":
+                                try
+                                {
+                                    string query_verificar = "SELECT folio_factura_exenta_compra FROM factura_exenta_compra WHERE folio_factura_exenta_compra = '" + folio + "' AND rutemis_factura_exenta_compra = '" + rutemis + "'";
+
+                                    List<string> lista_verificar = conexion.Select(query_verificar);
+
+                                    if (lista_verificar.Count == 0)
+                                    {
+                                        query = "INSERT INTO factura_exenta_compra (folio_factura_exenta_compra,uid_correo,fchemis_factura_exenta_compra,rutemis_factura_exenta_compra," +
+                                   "rznsocemis_factura_exenta_compra,cmnaorigen_factura_exenta_compra,mnttotal_factura_exenta_compra,detalle_factura_exenta_compra,folioref_factura_exenta_compra,tipo_dteref_factura_exenta_compra,ubicacion_factura_exenta_compra,estado_schema_factura_exenta_compra)" +
+                                   "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
+                                   " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + filePath + "','" + errorSchema + "')";
+
+                                        conexion.Consulta(query);
+                                        detalles = "";
+                                        respuestaDte.Add("RecepcionDTE-OK");
+                                    }
+                                    else
+                                    {
+                                        //AUMENTA EL CONTADOR
+                                        contador_repetidos_dte++;
+                                        if (!errorDTE)
+                                        {
+                                            respuestaDte.Add("RecepcionDTE-Repetido");
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+
+
+
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+
+                                }
+
+
+                                break;
+
+                            case "61":
+                                try
+                                {
+                                    string query_verificar = "SELECT folio_nota_credito_compra FROM nota_credito_compra WHERE folio_nota_credito_compra = '" + folio + "' AND rutemis_nota_credito_compra = '" + rutemis + "'";
+
+                                    List<string> lista_verificar = conexion.Select(query_verificar);
+                                    if (lista_verificar.Count == 0)
+                                    {
+
+
+
+                                        query = "INSERT INTO nota_credito_compra (folio_nota_credito_compra,uid_correo,fchemis_nota_credito_compra,rutemis_nota_credito_compra," +
+                                        "rznsocemis_nota_credito_compra,cmnaorigen_nota_credito_compra,mnttotal_nota_credito_compra,detalle_nota_credito_compra,folioref_nota_credito_compra,tipo_dteref_nota_credito_compra,ubicacion_nota_credito_compra,estado_schema_nota_credito_compra)" +
+                                        "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
+                                        " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + filePath + "','" + errorSchema + "')";
+
+                                        conexion.Consulta(query);
+                                        detalles = "";
+                                        respuestaDte.Add("RecepcionDTE-OK");
+                                    }
+                                    else
+                                    {
+                                        //AUMENTA EL CONTADOR
+                                        contador_repetidos_dte++;
+                                        if (!errorDTE)
+                                        {
+                                            respuestaDte.Add("RecepcionDTE-Repetido");
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+
+                                }
+
+
+                                break;
+
+                            case "56":
+                                try
+                                {
+                                    string query_verificar = "SELECT folio_nota_debito_compra FROM nota_debito_compra WHERE folio_nota_debito_compra = '" + folio + "' AND rutemis_nota_debito_compra = '" + rutemis + "'";
+
+                                    List<string> lista_verificar = conexion.Select(query_verificar);
+
+                                    if (lista_verificar.Count == 0)
+                                    {
+                                        query = "INSERT INTO nota_debito_compra (folio_nota_debito_compra,uid_correo,fchemis_nota_debito_compra,rutemis_nota_debito_compra," +
+                                                                                                       "rznsocemis_nota_debito_compra,cmnaorigen_nota_debito_compra,mnttotal_nota_debito_compra,detalle_nota_debito_compra,folioref_nota_debito_compra,tipo_dteref_nota_debito_compra,ubicacion_nota_debito_compra,estado_schema_nota_debito_compra)" +
+                                                                                                       "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
+                                                                                                       " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + filePath + "','" + errorSchema + "')";
+
+                                        conexion.Consulta(query);
+
+                                        detalles = "";
+                                        respuestaDte.Add("RecepcionDTE-OK");
+                                    }
+                                    else
+                                    {
+                                        //AUMENTA EL CONTADOR
+                                        contador_repetidos_dte++;
+                                        if (!errorDTE)
+                                        {
+                                            respuestaDte.Add("RecepcionDTE-Repetido");
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+                                    }
+
+
+
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+
+                                }
+
+
+                                break;
+
+                            case "52":
+                                try
+                                {
+                                    string query_verificar = "SELECT folio_guia_despacho_compra FROM guia_despacho_compra WHERE folio_guia_despacho_compra = '" + folio + "' AND rutemis_guia_despacho_compra = '" + rutemis + "'";
+
+                                    List<string> lista_verificar = conexion.Select(query_verificar);
+                                    if (lista_verificar.Count == 0)
+                                    {
+
+                                        query = "INSERT INTO guia_despacho_compra (folio_guia_despacho_compra,uid_correo,fchemis_guia_despacho_compra,rutemis_guia_despacho_compra," +
+                                        "rznsocemis_guia_despacho_compra,cmnaorigen_guia_despacho_compra,mnttotal_guia_despacho_compra,detalle_guia_despacho_compra,folioref_guia_despacho_compra,tipo_dteref_guia_despacho_compra,ubicacion_guia_despacho_compra,estado_schema_guia_despacho_compra)" +
+                                        "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
+                                        " '" + detalles + "', '" + referencia_folio + "', '" + referencia_tipodte + "','" + filePath + "','" + errorSchema + "')";
+
+                                        conexion.Consulta(query);
+                                        detalles = "";
+                                        respuestaDte.Add("RecepcionDTE-OK");
+                                    }
+                                    else
+                                    {
+                                        //AUMENTA EL CONTADOR
+                                        contador_repetidos_dte++;
+                                        if (!errorDTE)
+                                        {
+                                            respuestaDte.Add("RecepcionDTE-Repetido");
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                    }
+                }
+
+
+            }
+            catch (Exception e)
+            {
+                string JsonResponse = @"{""statusCode"": 500,""message"": ""HUBO UN ERROR : "+e.Message+@" ""}";
+
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application/json";
+                respuesta.StatusCode = 200;
+                return respuesta;
+
+            }
+
+            
+
+
+
+
+
+
+                return respuesta;
+        }
+
+
+
+            [HttpPost("api/dte/EmitirAcuseRecibo")]
         public ContentResult crearAcuseRecibo([FromBody] JsonElement values)
         {
             /*{
