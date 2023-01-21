@@ -32,8 +32,8 @@ namespace ApiAgroDTE.Controllers
        maullin - Certificacion facturas token
        palena - Produccion Facturas 
        */
-        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
         //[HttpGet("api/PruebaMetodo/nombre/{id}")]
@@ -86,7 +86,7 @@ namespace ApiAgroDTE.Controllers
         {
             /*{
                    "datosCargarXML":{
-                                       "PathXML":""
+                                       "base64XML":""
                    }
            }*/
 
@@ -108,26 +108,34 @@ namespace ApiAgroDTE.Controllers
 
             //SACAMOS LOS DATOS DESDE EL JSON
             JsonElement datosXML = values.GetProperty("datosCargarXML");
-            string pathXML = datosXML.GetProperty("PathXML").ToString();
+            string base64XML = datosXML.GetProperty("base64XML").ToString();
+
+            Byte[] bytes = Convert.FromBase64String(base64XML);
+
+            string fecha_actual = DateTime.Now.ToString("hhmmssfff");
 
             XmlDocument xml_file = new XmlDocument();
-            xml_file.Load(pathXML);
+            string xml = Encoding.UTF8.GetString(bytes);
+            xml_file.LoadXml(xml);
+            xml_file.PreserveWhitespace = true;
+            string pathXML_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Temp\xml_upload_" + fecha_actual + ".xml";
+            xml_file.Save(pathXML_Temp);
 
             var dte = xml_file.GetElementsByTagName("DTE");
 
 
             //VALIDAR XML CON SCHEMA
 
-            string filename = pathXML;
+            //string filename = pathXML;
             string respuestaSchema = "";
             string schemaFileName = schemaFileName = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Schemas\DTEs\EnvioDTE_v10.xsd";
 
-
+           
             try
             {
-                string path_servicio_validar_xml = "";
-                path_servicio_validar_xml = "http://192.168.1.9:90/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + filename + "&schemaFilename=" + schemaFileName;
-              
+               //string  path_servicio_validar_xml = "http://192.168.1.9:90/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + pathXML_Temp + "&schemaFilename=" + schemaFileName;
+
+                string path_servicio_validar_xml = "http://localhost:81/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + pathXML_Temp + "&schemaFilename=" + schemaFileName;
 
                 WebRequest request = WebRequest.Create(path_servicio_validar_xml);
                 request.Method = "GET";
@@ -162,15 +170,15 @@ namespace ApiAgroDTE.Controllers
                     string tipo_dte = "";
                     string folio = "";
                     string fchemis = "";
-                    string rutemis = "";
-                    string rznsocemisor = "";
-                    string cmnaorigenemisor = "";
+                    string rutrecep = "";
+                    string rznsocrecep = "";
+                    string cmnaorigenrecep = "";
                     string mnttotal = "";
                     string detalles = "";
                     string referencia_folio = "";
                     string referencia_tipodte = "";
                     string query = "";
-                    string rutrecep = "";
+                   
 
                     for (int j = 0; j < dte.Count; j++)
                     {
@@ -213,27 +221,7 @@ namespace ApiAgroDTE.Controllers
                                             }
 
                                         }
-                                        //BUSCAR NODOS DENTRO DE <Emisor>
-                                        else if (nodo_encabezado.ChildNodes[p].Name == "Emisor")
-                                        {
-                                            var nodo_Emisor = nodo_encabezado.ChildNodes[p];
-
-                                            for (int m = 0; m < nodo_Emisor.ChildNodes.Count; m++)
-                                            {
-                                                if (nodo_Emisor.ChildNodes[m].Name == "RUTEmisor")
-                                                {
-                                                    rutemis = nodo_Emisor.ChildNodes[m].InnerText;
-                                                }
-                                                else if (nodo_Emisor.ChildNodes[m].Name == "RznSoc")
-                                                {
-                                                    rznsocemisor = nodo_Emisor.ChildNodes[m].InnerText;
-                                                }
-                                                else if (nodo_Emisor.ChildNodes[m].Name == "CmnaOrigen")
-                                                {
-                                                    cmnaorigenemisor = nodo_Emisor.ChildNodes[m].InnerText;
-                                                }
-                                            }
-                                        }
+                                        
                                         else if (nodo_encabezado.ChildNodes[p].Name == "Receptor")
                                         {
                                             var nodo_Receptor = nodo_encabezado.ChildNodes[p];
@@ -243,6 +231,15 @@ namespace ApiAgroDTE.Controllers
                                                 {
                                                     rutrecep = nodo_Receptor.ChildNodes[r].InnerText;
 
+                                                }
+
+                                                else if (nodo_Receptor.ChildNodes[r].Name == "RznSocRecep")
+                                                {
+                                                    rznsocrecep = nodo_Receptor.ChildNodes[r].InnerText;
+                                                }
+                                                else if (nodo_Receptor.ChildNodes[r].Name == "CmnaRecep")
+                                                {
+                                                    cmnaorigenrecep = nodo_Receptor.ChildNodes[r].InnerText;
                                                 }
                                             }
 
@@ -313,13 +310,30 @@ namespace ApiAgroDTE.Controllers
 
                         if (j == 0)
                         {
-                            pathXML = pathXML.Replace("\\", "\\\\");
+                            pathXML_Temp = pathXML_Temp.Replace("\\", "\\\\");
                         }
 
                         ConexionBD conexion = new ConexionBD();
 
                         //INSERTAR EN ENVIO_DTE
-                        string query_envio_dte = "INSERT INTO envio_dte (trackid_envio_dte, estado_envio_dte, rutaxml_envio_dte, informados_envio_dte, aceptados_envio_dte, fecha_envio_dte, revision_envio_dte, envio_cliente_envio_dte, tipo_dte_envio_dte) VALUES (0, 'Enviado', '"+pathXML+"', 1, 1, '2023-01-20 13:22:06', 1, 1, '33');"
+                        string query_envio_dte = "INSERT INTO envio_dte (trackid_envio_dte, estado_envio_dte, rutaxml_envio_dte, informados_envio_dte, aceptados_envio_dte, fecha_envio_dte, revision_envio_dte, envio_cliente_envio_dte, tipo_dte_envio_dte) VALUES (0, 'Enviado', '" + pathXML_Temp + "', 1, 1, '" + fchemis + "', 1, 1, '" + tipo_dte + "')";
+                        conexion.Consulta(query_envio_dte);
+
+
+                        //COPIAR AL DIRECTORIO DE FACTURAS
+                        //CREAR DIRECTORIO
+                        string T33F = "T" + tipo_dte + "F" + folio;
+                        int folio_int = int.Parse(folio);
+                        int tipo_dte_int = int.Parse(tipo_dte);
+
+                        string directorioFechaActual = "";
+                        string directorioDTE = "";
+
+                        directorioFechaActual = Clases.DTE.crearDirectorio(folio_int, tipo_dte_int, T33F);
+                        directorioDTE = directorioFechaActual + @"\" + T33F + ".xml";
+
+                        xml_file.Save(directorioDTE);
+
 
                         switch (tipo_dte)
                         {
@@ -327,42 +341,28 @@ namespace ApiAgroDTE.Controllers
                                 try
                                 {
 
-                                    string query_verificar = "SELECT folio_factura_compra FROM factura_compra WHERE folio_factura_compra = '" + folio + "' AND rutemis_factura_compra = '" + rutemis + "'";
+                                    string query_verificar = "SELECT folio_factura FROM factura WHERE folio_factura = '" + folio + "' AND rutemis_factura_compra = '" + rutrecep + "'";
 
                                     List<string> lista_verificar = conexion.Select(query_verificar);
                                     if (lista_verificar.Count == 0)
                                     {
-                                        query = "INSERT INTO factura_compra (folio_factura_compra,uid_correo,fchemis_factura_compra,rutemis_factura_compra," +
-                                                                                                        "rznsocemis_factura_compra,cmnaorigen_factura_compra,mnttotal_factura_compra,detalle_factura_compra,folioref_factura_compra,tipo_dteref_factura_compra,ubicacion_factura_compra,estado_schema_factura_compra)" +
-                                                                                                        "VALUES ('" + folio + "', '" + correo_uid + "', '" + fchemis + "', '" + rutemis + "', '" + rznsocemisor + "', '" + cmnaorigenemisor + "', '" + mnttotal + "'," +
-                                                                                                        " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + filePath + "','" + errorSchema + "')";
+                                        query = "INSERT INTO factura (folio_factura,fchemis_factura,rutrecep_factura," +
+                                                                                                        "rznsocrecep_factura,cmnarecep_factura,mnttotal_factura,detalle_factura,folioref_factura,tipo_dteref_factura,ubicacion_factura)" +
+                                                                                                        "VALUES ('" + folio + "', '" + fchemis + "', '" + rutrecep + "', '" + rznsocrecep + "', '" + cmnaorigenrecep + "', '" + mnttotal + "'," +
+                                                                                                        " '" + detalles + "', '" + referencia_folio + "','" + referencia_tipodte + "', '" + directorioDTE + "')";
 
                                         conexion.Consulta(query);
                                         detalles = "";
-                                        respuestaDte.Add("RecepcionDTE-OK");
+                                        //respuestaDte.Add("RecepcionDTE-OK");
                                     }
-                                    else
-                                    {
-                                        //AUMENTA EL CONTADOR
-                                        contador_repetidos_dte++;
-                                        if (!errorDTE)
-                                        {
-                                            respuestaDte.Add("RecepcionDTE-Repetido");
-                                        }
-                                        else
-                                        {
-
-                                        }
-
-
-                                    }
+                                   
 
 
 
                                 }
                                 catch (Exception e)
                                 {
-                                    Console.WriteLine("HUBO UN PROBLEMA AL LEER XML DE PROVEEDOR: " + correo_uid + " MENSAJE: " + e.Message);
+                                    Console.WriteLine("HUBO UN PROBLEMA AL INSERTAR XML FOLIO: " + folio + " MENSAJE: " + e.Message);
 
                                 }
 
@@ -370,10 +370,10 @@ namespace ApiAgroDTE.Controllers
 
                                 break;
 
-                            case "34":
+                            /*case "34":
                                 try
                                 {
-                                    string query_verificar = "SELECT folio_factura_exenta_compra FROM factura_exenta_compra WHERE folio_factura_exenta_compra = '" + folio + "' AND rutemis_factura_exenta_compra = '" + rutemis + "'";
+                                    string query_verificar = "SELECT folio_factura_exenta FROM factura_exenta WHERE folio_factura_exenta = '" + folio + "' AND rutrecep_factura_exenta_compra = '" + rutemis + "'";
 
                                     List<string> lista_verificar = conexion.Select(query_verificar);
 
@@ -544,7 +544,7 @@ namespace ApiAgroDTE.Controllers
                                 }
                                 break;
                             default:
-                                break;
+                                break;*/
                         }
 
                     }
@@ -1188,8 +1188,8 @@ namespace ApiAgroDTE.Controllers
                                     if (respuestaCrearDTE[0] == "XML Valido" && respuestaCrearDTE[4] == "XML Valido")
                                     {
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                        string respuestaPing = checkPing("maullin.sii.cl");
-                                        string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws");
+                                        string respuestaPing = checkPing("palena.sii.cl");
+                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
 
 
 

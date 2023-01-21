@@ -642,7 +642,7 @@ namespace ApiAgroDTE.Clases
             return 0;
         }
 
-        public string crearDirectorio(int folio,int TipoDTE,string T33F)
+        public static string crearDirectorio(int folio,int TipoDTE,string T33F)
         {
             //Crear ruta del archivo xml saliente
             string currentDay = DateTime.Now.Day.ToString();
@@ -690,7 +690,7 @@ namespace ApiAgroDTE.Clases
             return folderPathDia;
         }
 
-        public string verificarDirectorio(string nombreDTE, string year, string mes, string dia)
+        public static string verificarDirectorio(string nombreDTE, string year, string mes, string dia)
         {
 
             //VERIFICAR AÑO
