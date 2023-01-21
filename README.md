@@ -18,8 +18,8 @@ en shemas.cs y envioDTE.cs localhost:90 (Si esta montado en el server) localhost
 PruebaControlador.cs:  
 * 35 public static string servidor_boletas = "apicert";  
 * 36 public static string servidor_facturas = "maullin";  
-* 699 string respuestaPing = checkPing("palena.sii.cl");  
-* 700 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
+* 1191 string respuestaPing = checkPing("palena.sii.cl");  
+* 1192 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
 
 EnvioDTE.cs
 * 376 var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");
