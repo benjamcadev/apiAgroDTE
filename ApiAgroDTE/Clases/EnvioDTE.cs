@@ -336,8 +336,8 @@ namespace ApiAgroDTE.Clases
         {
             
             //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo=" + archivo + "&rutEmisor=" + rutEmisor + "&rutEmpresa=" + rutEmpresa);
-            WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
-            //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
+            //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
+            WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
             request.Method = "GET";
             WebResponse response = request.GetResponse();
             string respuestaEnvio = "";
