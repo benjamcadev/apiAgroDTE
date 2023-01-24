@@ -548,7 +548,10 @@ namespace ApiAgroDTE.Clases
             if(CodRef != "2"){
                 if(DscRcgFlag == true){
 
-                    JArray DscRcgArray = JArray.Parse(DscRcgGlobalOp.ToString());
+                    //MODIFICACION: 23-01-2023: DGZ MANDA SOLO 1 OBJECT DE DESCUENTOS Y NO UN ARRAYS CON VARIOS DESCUENTOS COMO OBJECT DENTRO, POR LO TANTO TUVE QUE AGREGAR "[" "]" AL COMIENZO Y AL FINAL PARA QUE QUEDE COMO ARRAY.
+                    string descuentosStrObject = DscRcgGlobalOp.ToString();
+                    string descuentosSrtArray = "[" + descuentosStrObject + "]";
+                    JArray DscRcgArray = JArray.Parse(descuentosSrtArray);
                     var cantidadDscRcg = DscRcgArray.Count();
 
                     // Create a list  
@@ -565,6 +568,10 @@ namespace ApiAgroDTE.Clases
                     //Recorro los detalles enviados y los agrego a una lista
 
                     for (int i=0; i< DscRcgArray.Count(); i++){
+
+                        //MODIFICAION 23-01-2023: ACA LA REQUEST DEBE VENIR CON "glosaDR" en descuentos, de alguna forma setear la glosa en vacio si no viene en la request
+
+                        var prueba = ListaDscRcg[0];
 
                         DscRcgGlobal DscRcgObject = JsonConvert.DeserializeObject<DscRcgGlobal>(ListaDscRcg[i].ToString());
                 

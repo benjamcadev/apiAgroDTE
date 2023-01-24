@@ -13,17 +13,17 @@ namespace ApiAgroDTE.Clases
 
         //CREARR SWITCH SI ES DE PRUEBA O PRODUCCION
 
-        //static string servidor = "192.168.1.4";
-        //static string bd = "dte_agroplastic";
-        //static string usuario = "remoto"; 
-        //static string password = "agro1113$"; 
-        //static string port ="3306";
+        static string servidor = "192.168.1.4";
+        static string bd = "dte_agroplastic";
+        static string usuario = "remoto"; 
+        static string password = "agro1113$"; 
+        static string port ="3306";
 
-        static string servidor = "192.168.1.9";
+        /*static string servidor = "192.168.1.9";
         static string bd = "dte_agroplastic";
         static string usuario = "root";
         static string password = "agrodte1113";
-        static string port = "3307";
+        static string port = "3307";*/
 
         static string cadenaConexion = "Database=" + bd + "; Data Source=" + servidor + "; User Id=" + usuario + "; Password=" + password + "; Port=" + port + "";
 
