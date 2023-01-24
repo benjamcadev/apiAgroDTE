@@ -571,20 +571,24 @@ namespace ApiAgroDTE.Clases
 
                         //MODIFICAION 23-01-2023: ACA LA REQUEST DEBE VENIR CON "glosaDR" en descuentos, de alguna forma setear la glosa en vacio si no viene en la request
 
-                        var prueba = ListaDscRcg[0];
 
                         DscRcgGlobal DscRcgObject = JsonConvert.DeserializeObject<DscRcgGlobal>(ListaDscRcg[i].ToString());
                 
                         var NroLinDRStr = DscRcgObject.NroLinDR.ToString();
-                        var TpoMovStr = DscRcgObject.TpoMov.ToString();                
-                        var GlosaDRStr = DscRcgObject.GlosaDR.ToString();
+                        var TpoMovStr = DscRcgObject.TpoMov.ToString();
+                        //MODIFICACION 19-04-2022: DGZ NO MANDA GLOSA POR LO TANTO SE TUVO QUE HACER OPCIONAL
+                        string GlosaDRStr = "";
+                        if (DscRcgObject.GlosaDR is not null)
+                        {
+                            GlosaDRStr = DscRcgObject.GlosaDR.ToString();
+                        }
                         var TpoValorStr = DscRcgObject.TpoValor.ToString();
                         var ValorDRStr = DscRcgObject.ValorDR.ToString();
 
                         writer.WriteStartElement("DscRcgGlobal");
                         writer.WriteElementString("NroLinDR", NroLinDRStr);
                         writer.WriteElementString("TpoMov", TpoMovStr);
-                        writer.WriteElementString("GlosaDR", GlosaDRStr);
+                       writer.WriteElementString("GlosaDR", GlosaDRStr);
                         writer.WriteElementString("TpoValor", TpoValorStr);
                         writer.WriteElementString("ValorDR", ValorDRStr);
                         writer.WriteEndElement();
