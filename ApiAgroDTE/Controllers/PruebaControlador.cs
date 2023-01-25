@@ -32,8 +32,8 @@ namespace ApiAgroDTE.Controllers
        maullin - Certificacion facturas token
        palena - Produccion Facturas 
        */
-        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
         //[HttpGet("api/PruebaMetodo/nombre/{id}")]
@@ -1188,8 +1188,8 @@ namespace ApiAgroDTE.Controllers
                                     if (respuestaCrearDTE[0] == "XML Valido" && respuestaCrearDTE[4] == "XML Valido")
                                     {
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                        string respuestaPing = checkPing("palena.sii.cl");
-                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
+                                        string respuestaPing = checkPing("maullin.sii.cl");
+                                        string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws");
 
 
 
