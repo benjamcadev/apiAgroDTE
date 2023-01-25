@@ -140,7 +140,7 @@ namespace ApiAgroDTE.Clases
             }
             else
             {
-                RUTRecep = Receptor.GetProperty("RUTRecep").ToString();// Requerido
+                RUTRecep = Receptor.GetProperty("RUTRecep").ToString().ToUpper();// Requerido
                 RznSocRecep = Receptor.GetProperty("RznSocRecep").ToString();// Requerido
                 GiroRecep = Receptor.GetProperty("GiroRecep").ToString();// Requerido
                 DirRecep = Receptor.GetProperty("DirRecep").ToString();// Requerido

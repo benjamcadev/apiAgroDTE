@@ -82,7 +82,7 @@ namespace ApiAgroDTE.Clases
 
             JsonElement Receptor = Encabezado.GetProperty("Receptor");
 
-            string RUTRecep = Receptor.GetProperty("RUTRecep").ToString();// Requerido
+            string RUTRecep = Receptor.GetProperty("RUTRecep").ToString().ToUpper();//Requerido
             string RznSocRecep = Receptor.GetProperty("RznSocRecep").ToString();// Requerido
             string GiroRecep = Receptor.GetProperty("GiroRecep").ToString();// Requerido
             string DirRecep = Receptor.GetProperty("DirRecep").ToString();// Requerido
