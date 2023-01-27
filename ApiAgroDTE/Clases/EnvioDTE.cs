@@ -335,9 +335,9 @@ namespace ApiAgroDTE.Clases
         public string enviarSobre(string archivo, string rutEmisor, string rutEmpresa)
         {
             
-            //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo=" + archivo + "&rutEmisor=" + rutEmisor + "&rutEmpresa=" + rutEmpresa);
+            WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo=" + archivo + "&rutEmisor=" + rutEmisor + "&rutEmpresa=" + rutEmpresa);
             //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
-            WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
+            //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
             request.Method = "GET";
             WebResponse response = request.GetResponse();
             string respuestaEnvio = "";
@@ -345,6 +345,15 @@ namespace ApiAgroDTE.Clases
             {
                 respuestaEnvio = reader.ReadToEnd(); // do something fun...
             }
+
+            //27-01-2023: QUIERO GUARDAR LA RESPUESTA DEL SII PORQUE ALGUNOS NUMEROS DE ENVIO LOS GUARDA EN 0
+            string archivostr = respuestaEnvio;
+            string hora_actual = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+            using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Respuesta_SII_Sobre_"+hora_actual+".txt"))
+            {
+                writetext.WriteLine(archivostr);
+            }
+
             return respuestaEnvio;
         }
 
@@ -373,8 +382,8 @@ namespace ApiAgroDTE.Clases
 
                 //METODO RESTSHARP----------------------------------------------------
                 //SETEAMOS PARAMETROS DEL CLIENTE
-                var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");// PRODUCCION
-                //var client = new RestClient("https://pangal.sii.cl/recursos/v1/boleta.electronica.envio");// CERTIFICACION
+                //var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");// PRODUCCION
+                var client = new RestClient("https://pangal.sii.cl/recursos/v1/boleta.electronica.envio");// CERTIFICACION
                 client.UserAgent = "Mozilla/4.0 ( compatible; PROG 1.0; Windows NT)";
 
                 //SETEAMOS PARAMETROS DE LA REQUEST
@@ -384,8 +393,8 @@ namespace ApiAgroDTE.Clases
                 request.AddHeader("Accept", "application/json");
                 request.AlwaysMultipartFormData = true;
                 request.AddHeader("Content-Type", "multipart/form-data");
-                request.AddHeader("Host", "rahue.sii.cl"); //PRODUCCION
-                //request.AddHeader("Host", "pangal.sii.cl"); //CERTIFICACION
+                //request.AddHeader("Host", "rahue.sii.cl"); //PRODUCCION
+                request.AddHeader("Host", "pangal.sii.cl"); //CERTIFICACION
                 
                 //AGREGAMOS LOS PARAMETROS
                 request.AddParameter("rutSender", pRutEmisor);
@@ -474,8 +483,8 @@ namespace ApiAgroDTE.Clases
             {
                 //NO EXISTE TOKEN ACTIVO, SE PIDE UNO
                 //OBTENER SEMILLA
-                var client = new RestClient("https://api.sii.cl/recursos/v1/"); //PRODUCCION
-                //var client = new RestClient("https://apicert.sii.cl/recursos/v1/"); //CERTIFICACION
+                //var client = new RestClient("https://api.sii.cl/recursos/v1/"); //PRODUCCION
+                var client = new RestClient("https://apicert.sii.cl/recursos/v1/"); //CERTIFICACION
                 var request = new RestRequest("boleta.electronica.semilla", Method.GET);
                 var response = client.Execute(request);
 
