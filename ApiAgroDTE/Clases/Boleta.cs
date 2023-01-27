@@ -18,6 +18,7 @@ namespace ApiAgroDTE.Clases
         string archxml = "";
         public string crearBoleta(JsonElement Encabezado, JsonElement Detalles, JsonElement ReferenciaOp, Boolean RefFlag, JsonElement DscRcgGlobalOp, Boolean DscRcgFlag, int nuevoFolio, string archxml, string T39B)
         {
+            Operaciones op = new Operaciones();
 
             //------------------------------------------------------------------------------------------------------------------
             //CAPTURAR DATOS EN VARIABLES----------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -186,6 +187,7 @@ namespace ApiAgroDTE.Clases
 
 
 
+           
 
             for (int i = 0; i < detallesArray.Count(); i++)
             {
@@ -202,7 +204,10 @@ namespace ApiAgroDTE.Clases
                 string DescuentoMonto = "";
                 string RecargoPct = "";
                 string RecargoMonto = "";
-                
+
+
+                NmbItemStr = op.LimpiarCaracter(NmbItemStr);
+
 
                 if (detalleObject.DescuentoPct is not null)
                 {
@@ -370,6 +375,7 @@ namespace ApiAgroDTE.Clases
                     if (DscRcgObject.GlosaDR is not null)
                     {
                         GlosaDRStr = DscRcgObject.GlosaDR.ToString();
+                        GlosaDRStr = op.LimpiarCaracter(GlosaDRStr);
                     }
                     
                     
@@ -422,6 +428,8 @@ namespace ApiAgroDTE.Clases
 
                    // var FchRefStr = referenciaObject.FchRef.ToString();
                     var RazonRefStr = referenciaObject.RazonRef.ToString();
+
+                    RazonRefStr = op.LimpiarCaracter(RazonRefStr);
 
                     writer.WriteStartElement("Referencia");
                     writer.WriteElementString("NroLinRef", NroLinRefStr);

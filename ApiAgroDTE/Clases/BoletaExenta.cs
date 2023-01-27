@@ -19,6 +19,7 @@ namespace ApiAgroDTE.Clases
 
         public string crearBoleta(JsonElement Encabezado, JsonElement Detalles, JsonElement ReferenciaOp, Boolean RefFlag, JsonElement DscRcgGlobalOp, Boolean DscRcgFlag, int nuevoFolio, string archxml, string T41B)
         {
+            Operaciones op = new Operaciones();
 
             //------------------------------------------------------------------------------------------------------------------
             //CAPTURAR DATOS EN VARIABLES----------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -238,7 +239,9 @@ namespace ApiAgroDTE.Clases
                 string DescuentoMonto = "";
                 string RecargoPct = "";
                 string RecargoMonto = "";
-                
+
+                NmbItemStr = op.LimpiarCaracter(NmbItemStr);
+
 
                 if (detalleObject.DescuentoPct is not null)
                 {
@@ -377,8 +380,12 @@ namespace ApiAgroDTE.Clases
             if (DscRcgFlag == true)
             {
 
-                JArray DscRcgArray = JArray.Parse(DscRcgGlobalOp.ToString());
+                //MODIFICACION: 19-04-2022: DGZ MANDA SOLO 1 OBJECT DE DESCUENTOS Y NO UN ARRAYS CON VARIOS DESCUENTOS COMO OBJECT DENTRO, POR LO TANTO TUVE QUE AGREGAR "[" "]" AL COMIENZO Y AL FINAL PARA QUE QUEDE COMO ARRAY.
+                string descuentosStrObject = DscRcgGlobalOp.ToString();
+                string descuentosSrtArray = "[" + descuentosStrObject + "]";
+                JArray DscRcgArray = JArray.Parse(descuentosSrtArray);
                 var cantidadDscRcg = DscRcgArray.Count();
+
 
                 // Create a list  
 
@@ -401,7 +408,14 @@ namespace ApiAgroDTE.Clases
 
                     var NroLinDRStr = DscRcgObject.NroLinDR.ToString();
                     var TpoMovStr = DscRcgObject.TpoMov.ToString();
-                    var GlosaDRStr = DscRcgObject.GlosaDR.ToString();
+                    //MODIFICACION 19-04-2022: DGZ NO MANDA GLOSA POR LO TANTO SE TUVO QUE HACER OPCIONAL
+                    string GlosaDRStr = "";
+                    if (DscRcgObject.GlosaDR is not null)
+                    {
+                        GlosaDRStr = DscRcgObject.GlosaDR.ToString();
+                        GlosaDRStr = op.LimpiarCaracter(GlosaDRStr);
+                    }
+
                     var TpoValorStr = DscRcgObject.TpoValor.ToString();
                     var ValorDRStr = DscRcgObject.ValorDR.ToString();
 
@@ -449,6 +463,8 @@ namespace ApiAgroDTE.Clases
                     var FolioRefStr = referenciaObject.FolioRef.ToString();
                     var FchRefStr = referenciaObject.FchRef.ToString();
                     var RazonRefStr = referenciaObject.RazonRef.ToString();
+
+                    RazonRefStr = op.LimpiarCaracter(RazonRefStr);
 
                     writer.WriteStartElement("Referencia");
                     writer.WriteElementString("NroLinRef", NroLinRefStr);

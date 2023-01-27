@@ -375,73 +375,96 @@ namespace ApiAgroDTE.Clases
 
         }
 
+        public string LimpiarCaracter(string strCadena)
+        {
+            strCadena = strCadena.Replace("°", " ");
+            strCadena = strCadena.Replace("*", " ");
+            strCadena = strCadena.Replace("_", " ");
+            strCadena = strCadena.Replace("á", "a");
+            strCadena = strCadena.Replace("é", "e");
+            strCadena = strCadena.Replace("í", "i");
+            strCadena = strCadena.Replace("ó", "o");
+            strCadena = strCadena.Replace("ú", "u");
+            strCadena = strCadena.Replace("ñ", "n");
+            strCadena = strCadena.Replace("Á", "A");
+            strCadena = strCadena.Replace("É", "E");
+            strCadena = strCadena.Replace("Ó", "O");
+            strCadena = strCadena.Replace("Ú", "U");
+            strCadena = strCadena.Replace("Ñ", "N");
+            strCadena = strCadena.Replace("Ü", "U");
+            strCadena = strCadena.Replace("ü", "u");
+            strCadena = strCadena.Replace("\"", "");
 
-/*
-        public double[] RecargoGlobal (string TpoValorStr, string ValorDRStr,string MntNetoStr,string IVAStr, string MntTotalStr){
-
-            double IVADbl = double.Parse(IVAStr);
-            double MntNetoDbl = double.Parse(MntNetoStr);
-            double ValorDRDbl = double.Parse(ValorDRStr);
-            double MntTotalDbl = double.Parse(MntTotalStr);
-
-            if(TpoValorStr == "%"){
-                double valorDescuento = 1 + (ValorDRDbl / 100);
-                double MntNeto = MntNetoDbl * valorDescuento;
-                double IVA = IVADbl * valorDescuento;
-                double MntTotal = MntTotalDbl * valorDescuento;
-
-                
-
-                double[] ResultadoPorcentaje = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
-                return ResultadoPorcentaje;
-
-            }
-            if(TpoValorStr == "$"){
-                //REGLA DE 3 SIMPLE PARA DETERMINAR EL PORCENTAJE DE DESCUENTO Y A PLICARLO A LOS DEMAS MONTOS
-                double PorRecargo = 1 + ((ValorDRDbl*1)/MntNetoDbl);
-                double IVA = IVADbl * PorRecargo;
-                double MntTotal = MntTotalDbl * PorRecargo;
-                double MntNeto = MntNetoDbl + ValorDRDbl; //SE PUEDE SUMAR O UTILIZAR EL PORCENTAJE, DA EL MISMO RESULTADO
-
-                double[] ResultadoPesos = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
-                return ResultadoPesos;
-            }
-
-            double[] Resultado = new double[]{}; 
-            return Resultado;
+            return strCadena;
         }
 
-        public double[] DescuentoGlobal (string TpoValorStr, string ValorDRStr,string MntNetoStr,string IVAStr, string MntTotalStr){
-            
-            double IVADbl = double.Parse(IVAStr);
-            double MntNetoDbl = double.Parse(MntNetoStr);
-            double ValorDRDbl = double.Parse(ValorDRStr);
-            double MntTotalDbl = double.Parse(MntTotalStr);
-            
-            if(TpoValorStr == "%"){
-                double valorDescuento = 1 - (ValorDRDbl / 100);
-                double MntNeto = MntNetoDbl * valorDescuento;
-                double IVA = IVADbl * valorDescuento;
-                double MntTotal = MntTotalDbl * valorDescuento;
 
-                double[] ResultadoPorcentaje = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
-                return ResultadoPorcentaje;
+        /*
+                public double[] RecargoGlobal (string TpoValorStr, string ValorDRStr,string MntNetoStr,string IVAStr, string MntTotalStr){
 
-            }
-            if(TpoValorStr == "$"){
-                //REGLA DE 3 SIMPLE PARA DETERMINAR EL PORCENTAJE DE DESCUENTO Y A PLICARLO A LOS DEMAS MONTOS
-                double PorDescuento = 1 - ((ValorDRDbl*1)/MntNetoDbl);
-                double IVA = IVADbl * PorDescuento;
-                double MntTotal = MntTotalDbl * PorDescuento;
-                double MntNeto = MntNetoDbl - ValorDRDbl; //SE PUEDE RESTAR O UTILIZAR EL PORCENTAJE, DA EL MISMO RESULTADO
+                    double IVADbl = double.Parse(IVAStr);
+                    double MntNetoDbl = double.Parse(MntNetoStr);
+                    double ValorDRDbl = double.Parse(ValorDRStr);
+                    double MntTotalDbl = double.Parse(MntTotalStr);
 
-                double[] ResultadoPesos = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
-                return ResultadoPesos;
-            }
+                    if(TpoValorStr == "%"){
+                        double valorDescuento = 1 + (ValorDRDbl / 100);
+                        double MntNeto = MntNetoDbl * valorDescuento;
+                        double IVA = IVADbl * valorDescuento;
+                        double MntTotal = MntTotalDbl * valorDescuento;
 
-            double[] Resultado = new double[]{}; 
-            return Resultado;
-        }*/
+
+
+                        double[] ResultadoPorcentaje = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
+                        return ResultadoPorcentaje;
+
+                    }
+                    if(TpoValorStr == "$"){
+                        //REGLA DE 3 SIMPLE PARA DETERMINAR EL PORCENTAJE DE DESCUENTO Y A PLICARLO A LOS DEMAS MONTOS
+                        double PorRecargo = 1 + ((ValorDRDbl*1)/MntNetoDbl);
+                        double IVA = IVADbl * PorRecargo;
+                        double MntTotal = MntTotalDbl * PorRecargo;
+                        double MntNeto = MntNetoDbl + ValorDRDbl; //SE PUEDE SUMAR O UTILIZAR EL PORCENTAJE, DA EL MISMO RESULTADO
+
+                        double[] ResultadoPesos = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
+                        return ResultadoPesos;
+                    }
+
+                    double[] Resultado = new double[]{}; 
+                    return Resultado;
+                }
+
+                public double[] DescuentoGlobal (string TpoValorStr, string ValorDRStr,string MntNetoStr,string IVAStr, string MntTotalStr){
+
+                    double IVADbl = double.Parse(IVAStr);
+                    double MntNetoDbl = double.Parse(MntNetoStr);
+                    double ValorDRDbl = double.Parse(ValorDRStr);
+                    double MntTotalDbl = double.Parse(MntTotalStr);
+
+                    if(TpoValorStr == "%"){
+                        double valorDescuento = 1 - (ValorDRDbl / 100);
+                        double MntNeto = MntNetoDbl * valorDescuento;
+                        double IVA = IVADbl * valorDescuento;
+                        double MntTotal = MntTotalDbl * valorDescuento;
+
+                        double[] ResultadoPorcentaje = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
+                        return ResultadoPorcentaje;
+
+                    }
+                    if(TpoValorStr == "$"){
+                        //REGLA DE 3 SIMPLE PARA DETERMINAR EL PORCENTAJE DE DESCUENTO Y A PLICARLO A LOS DEMAS MONTOS
+                        double PorDescuento = 1 - ((ValorDRDbl*1)/MntNetoDbl);
+                        double IVA = IVADbl * PorDescuento;
+                        double MntTotal = MntTotalDbl * PorDescuento;
+                        double MntNeto = MntNetoDbl - ValorDRDbl; //SE PUEDE RESTAR O UTILIZAR EL PORCENTAJE, DA EL MISMO RESULTADO
+
+                        double[] ResultadoPesos = new double[]{Math.Round(MntNeto),Math.Round(IVA),Math.Round(MntTotal)};
+                        return ResultadoPesos;
+                    }
+
+                    double[] Resultado = new double[]{}; 
+                    return Resultado;
+                }*/
     }  
 
     //nueva clase para notas de credito, montos = a 0

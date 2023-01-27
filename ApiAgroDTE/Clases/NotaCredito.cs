@@ -19,6 +19,7 @@ namespace ApiAgroDTE.Clases
 
         public string crearNotaCredito(JsonElement Encabezado, JsonElement Detalles, JsonElement ReferenciaOp, Boolean RefFlag, JsonElement DscRcgGlobalOp, Boolean DscRcgFlag, int nuevoFolio, string archxml,string T33F)
         {
+            Operaciones op = new Operaciones();
             //------------------------------------------------------------------------------------------------------------------
             //CAPTURAR DATOS EN VARIABLES----------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             //------------------------------------------------------------------------------------------------------------------
@@ -146,6 +147,11 @@ namespace ApiAgroDTE.Clases
                 DirRecep = Receptor.GetProperty("DirRecep").ToString();// Requerido
                 CmnaRecep = Receptor.GetProperty("CmnaRecep").ToString();// Requerido
                 //string Contacto = Receptor.GetProperty("Contacto").ToString();// Requerido
+
+                 RznSocRecep = op.LimpiarCaracter(RznSocRecep);
+                 DirRecep = op.LimpiarCaracter(DirRecep);
+                CmnaRecep = op.LimpiarCaracter(CmnaRecep);
+
             }
 
 
@@ -390,7 +396,9 @@ namespace ApiAgroDTE.Clases
                 string DescuentoMonto = "";
                 string RecargoPct = "";
                 string RecargoMonto = "";
-                
+
+                NmbItemStr = op.LimpiarCaracter(NmbItemStr);
+
 
                 if (detalleObject.DescuentoPct is not null)
                 {
@@ -585,6 +593,8 @@ namespace ApiAgroDTE.Clases
                         var TpoValorStr = DscRcgObject.TpoValor.ToString();
                         var ValorDRStr = DscRcgObject.ValorDR.ToString();
 
+                        GlosaDRStr = op.LimpiarCaracter(GlosaDRStr);
+
                         writer.WriteStartElement("DscRcgGlobal");
                         writer.WriteElementString("NroLinDR", NroLinDRStr);
                         writer.WriteElementString("TpoMov", TpoMovStr);
@@ -628,6 +638,8 @@ namespace ApiAgroDTE.Clases
                     var CodRefStr = referenciaObject.CodRef.ToString();
 
                     var RazonRefStr = referenciaObject.RazonRef.ToString();
+
+                    RazonRefStr = op.LimpiarCaracter(RazonRefStr);
 
                     writer.WriteStartElement("Referencia");
                     writer.WriteElementString("NroLinRef", NroLinRefStr);

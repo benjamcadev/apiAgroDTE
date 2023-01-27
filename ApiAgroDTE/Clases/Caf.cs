@@ -175,8 +175,11 @@ namespace ApiAgroDTE.Clases
             item_dd = item_dd.Replace(">", "&gt;");
             item_dd = item_dd.Replace("'", "&apos;");
             item_dd = item_dd.Replace("\"", "&quot;");
+            Operaciones op = new Operaciones();
+            item_dd = op.LimpiarCaracter(item_dd);
 
-            
+
+
             byte[] tempBytes;
             tempBytes = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(item_dd);
             item_dd = System.Text.Encoding.UTF8.GetString(tempBytes);
@@ -212,6 +215,7 @@ namespace ApiAgroDTE.Clases
             razonreceptor_dd = razonreceptor_dd.Replace(">", "&gt;");
             razonreceptor_dd = razonreceptor_dd.Replace("'", "&apos;");
             razonreceptor_dd = razonreceptor_dd.Replace("\"", "&quot;");
+            razonreceptor_dd = op.LimpiarCaracter(razonreceptor_dd);
 
             byte[] tempBytes2;
             tempBytes2 = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(razonreceptor_dd);
