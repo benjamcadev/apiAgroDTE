@@ -665,10 +665,12 @@ namespace ApiAgroDTE.Clases
             if (detalleObjectI.NmbItem.Length > MaxLength)
             {
                 nmbItem = detalleObjectI.NmbItem.Substring(0, 39);
+                nmbItem = op.LimpiarCaracter(nmbItem);
             }
             else
             {
                 nmbItem = detalleObjectI.NmbItem;
+                nmbItem = op.LimpiarCaracter(nmbItem);
             }
 
             //SETEAMOS EL LARGO MAX DEL razonReceptor ES DE 40 CARACTERES

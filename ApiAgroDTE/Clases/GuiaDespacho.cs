@@ -18,6 +18,7 @@ namespace ApiAgroDTE.Clases
         string archxml = "";
         public string crearGuiaDespacho(JsonElement Encabezado, JsonElement Detalles, JsonElement ReferenciaOp, Boolean RefFlag, JsonElement DscRcgGlobalOp, Boolean DscRcgFlag, int nuevoFolio, string archxml, string T52GD)
         {
+            Operaciones op = new Operaciones();
 
             //------------------------------------------------------------------------------------------------------------------
             //CAPTURAR DATOS EN VARIABLES----------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -98,6 +99,10 @@ namespace ApiAgroDTE.Clases
             string CmnaRecep = Receptor.GetProperty("CmnaRecep").ToString();// Requerido
             //string Contacto = Receptor.GetProperty("Contacto").ToString();// Requerido
 
+             RznSocRecep = op.LimpiarCaracter(RznSocRecep);
+             DirRecep = op.LimpiarCaracter(DirRecep);
+             CmnaRecep = op.LimpiarCaracter(CmnaRecep);
+
             string CiudadRecepOp = "";//Opcional
             if (Receptor.TryGetProperty("CiudadRecep", out var CiudadRecep))
             {
@@ -107,11 +112,13 @@ namespace ApiAgroDTE.Clases
             JsonElement Transporte = Encabezado.GetProperty("Transporte");
 
             string CmnaDest = Transporte.GetProperty("CmnaDest").ToString();
+            CmnaDest = op.LimpiarCaracter(CmnaDest);
 
             string DirDestOp = "";//Opcional
             if (Transporte.TryGetProperty("DirDest", out var DirDest))
             {
                 DirDestOp = DirDest.ToString();
+                DirDestOp = op.LimpiarCaracter(DirDestOp);
             }
 
             string CiudadDestOp = "";//Opcional
@@ -332,7 +339,9 @@ namespace ApiAgroDTE.Clases
                 string DescuentoMonto = "";
                 string RecargoPct = "";
                 string RecargoMonto = "";
-                
+
+                NmbItemStr = op.LimpiarCaracter(NmbItemStr);
+
 
                 if (detalleObject.DescuentoPct is not null)
                 {
@@ -495,6 +504,8 @@ namespace ApiAgroDTE.Clases
                     var TpoValorStr = DscRcgObject.TpoValor.ToString();
                     var ValorDRStr = DscRcgObject.ValorDR.ToString();
 
+                    GlosaDRStr = op.LimpiarCaracter(GlosaDRStr);
+
                     writer.WriteStartElement("DscRcgGlobal");
                     writer.WriteElementString("NroLinDR", NroLinDRStr);
                     writer.WriteElementString("TpoMov", TpoMovStr);
@@ -538,6 +549,8 @@ namespace ApiAgroDTE.Clases
                     var FolioRefStr = referenciaObject.FolioRef.ToString();
                     var FchRefStr = referenciaObject.FchRef.ToString();
                     var RazonRefStr = referenciaObject.RazonRef.ToString();
+
+                    RazonRefStr = op.LimpiarCaracter(RazonRefStr);
 
                     writer.WriteStartElement("Referencia");
                     writer.WriteElementString("NroLinRef", NroLinRefStr);
@@ -602,10 +615,12 @@ namespace ApiAgroDTE.Clases
             if (detalleObjectI.NmbItem.Length > MaxLength)
             {
                 nmbItem = detalleObjectI.NmbItem.Substring(0, 39);
+                nmbItem = op.LimpiarCaracter(nmbItem);
             }
             else
             {
                 nmbItem = detalleObjectI.NmbItem;
+                nmbItem = op.LimpiarCaracter(nmbItem);
             }
 
             //SETEAMOS EL LARGO MAX DEL razonReceptor ES DE 40 CARACTERES
