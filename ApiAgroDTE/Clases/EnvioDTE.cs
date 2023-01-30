@@ -346,6 +346,8 @@ namespace ApiAgroDTE.Clases
                 respuestaEnvio = reader.ReadToEnd(); // do something fun...
             }
 
+
+
             //27-01-2023: QUIERO GUARDAR LA RESPUESTA DEL SII PORQUE ALGUNOS NUMEROS DE ENVIO LOS GUARDA EN 0
             string archivostr = respuestaEnvio;
             string hora_actual = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
