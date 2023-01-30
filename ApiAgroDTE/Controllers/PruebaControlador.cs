@@ -1218,6 +1218,17 @@ namespace ApiAgroDTE.Controllers
                                                 xmlDoc2.LoadXml(respuestaEnvio);
                                                 XmlNodeList TrackId = xmlDoc2.GetElementsByTagName("string");
                                                 TrackId_str = TrackId[0].InnerXml;
+
+                                                //SI EL SII ENVIA UN TRACK ID 0 EJECUTAMOS OTRA VEZ EL ENVIAR SOBRE
+                                                if (TrackId_str == "0")
+                                                {
+                                                    respuestaEnvio = envio.enviarSobre(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
+                                                    XmlDocument xmlDoc3 = new XmlDocument();
+                                                    xmlDoc2.LoadXml(respuestaEnvio);
+                                                    XmlNodeList TrackId2 = xmlDoc2.GetElementsByTagName("string");
+                                                    TrackId_str = TrackId2[0].InnerXml;
+
+                                                }
                                             }
 
 
