@@ -32,8 +32,8 @@ namespace ApiAgroDTE.Controllers
        maullin - Certificacion facturas token
        palena - Produccion Facturas 
        */
-        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
         //[HttpGet("api/PruebaMetodo/nombre/{id}")]
@@ -81,7 +81,38 @@ namespace ApiAgroDTE.Controllers
             return "los datos recbibidos son"+id+" - "+id2;
         }
 
-        [HttpPost("api/dte/cargarXML")]
+        [HttpGet("api/dte/taxpayer/{rut}")]
+        public ContentResult datosCliente(string rut)
+        {
+            ContentResult respuesta = new ContentResult();
+
+            string consulta = "SELECT contribuyentes_direccion.rut, contribuyentes_acteco.razon_social, contribuyentes_correo.correo,contribuyentes_correo.fono_contacto, " +
+                                "contribuyentes_direccion.calle, contribuyentes_direccion.numero, contribuyentes_direccion.ciudad, contribuyentes_direccion.comuna,"+
+                                "contribuyentes_acteco.des_actividad_economica"+
+                                " FROM contribuyentes_direccion"+
+                                " JOIN contribuyentes_acteco ON contribuyentes_acteco.rut = contribuyentes_direccion.rut"+
+                                " JOIN contribuyentes_correo ON contribuyentes_correo.rut = contribuyentes_direccion.rut"+
+                                " WHERE contribuyentes_direccion.rut = \"76958430-7\"" +
+                                " GROUP BY calle, des_actividad_economica";
+
+            ConexionBD conexion = new ConexionBD();
+            List<string> lista_datos = conexion.Select(consulta);
+
+
+
+
+            string JsonResponse = @"{""rut"": """+lista_datos[0]+@""",""razonSocial"": """+lista_datos[1]+ @""",""email"": """+lista_datos[2]+ @""",""telefono"": """ + lista_datos[3] + @""",""direccion"": """ + lista_datos[4] + " "+ lista_datos[5] + " "+ lista_datos[6] + @" "",""comuna"": """ + lista_datos[7] + @""",}";
+
+            respuesta.Content = JsonResponse;
+            respuesta.ContentType = "application/json";
+            respuesta.StatusCode = 200;
+
+
+
+            return respuesta;
+        }
+
+            [HttpPost("api/dte/cargarXML")]
         public ContentResult cargarXML([FromBody] JsonElement values)
         {
             /*{
@@ -1188,10 +1219,10 @@ namespace ApiAgroDTE.Controllers
                                     if (respuestaCrearDTE[0] == "XML Valido" && respuestaCrearDTE[4] == "XML Valido")
                                     {
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                        string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
-                                        //string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
-                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
-                                        //string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
+                                        //string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
+                                        string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
+                                        //string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
+                                        string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
 
 
