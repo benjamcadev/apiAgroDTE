@@ -1076,13 +1076,22 @@ namespace ApiAgroDTE.Controllers
                                     writetext.Close();
                                 }
 
+                                //GUARDA LA ULTIMA REQUEST EMITIDA
                                 string archivostr = values.ToString();
                                 using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\request.txt"))
                                 {
                                     writetext.WriteLine(archivostr);
-                                } 
+                                }
 
-                               
+                                //GUARDA LAS REQUEST
+                                string hora_actual = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Request_" + hora_actual + ".txt"))
+                                {
+                                    writetext.WriteLine(archivostr);
+                                }
+
+
+
                                 //VALIDAMOS QUE VENGA EN EL JSON 'dte'
                                 if (!values.TryGetProperty("dte", out var dte_content))
                                 {
