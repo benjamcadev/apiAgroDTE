@@ -397,6 +397,10 @@ namespace ApiAgroDTE.Clases
             strCadena = strCadena.Replace("º", " ");
             strCadena = strCadena.Replace("Nº", "N");
             strCadena = strCadena.Replace("/", "");
+            strCadena = strCadena.Replace("Í", "I");
+            strCadena = strCadena.Replace("-", " ");
+           
+
 
 
             return strCadena;
