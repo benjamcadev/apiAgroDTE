@@ -413,7 +413,8 @@ namespace ApiAgroDTE.Clases
 
 
 
-                //CHEQUEAR SI LA RESPUESTA ES UN JSON, SI ES ASI VALIDAR LA KEY "estado" == "REC"
+                //CHEQUEAR SI LA RESPUESTA ES UN JSON, SI ES ASI
+                //LA KEY "estado" == "REC"
 
                 if (!string.IsNullOrEmpty(respuesta_envio_boleta))
                 {

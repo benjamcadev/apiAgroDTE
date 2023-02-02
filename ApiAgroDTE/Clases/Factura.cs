@@ -256,7 +256,8 @@ namespace ApiAgroDTE.Clases
                 ListaDetalles.Add(detalle);                
             }
 
-            //ENVIAMOS LA LISTA PARA REALIZAR OPERACIONES Y VALIDAR CUADRE DE MONTOS
+            //ENVIAMOS LA LISTA PARA REALIZAR OPERACIONES Y
+            //CUADRE DE MONTOS
 
 
             
