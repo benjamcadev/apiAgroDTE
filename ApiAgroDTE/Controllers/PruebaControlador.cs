@@ -32,8 +32,8 @@ namespace ApiAgroDTE.Controllers
        maullin - Certificacion facturas token
        palena - Produccion Facturas 
        */
-        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
         //[HttpGet("api/PruebaMetodo/nombre/{id}")]
@@ -81,7 +81,149 @@ namespace ApiAgroDTE.Controllers
             return "los datos recbibidos son"+id+" - "+id2;
         }
 
-        [HttpPost("api/dte/cargarXML")]
+        [HttpGet("api/dte/taxpayer/{rut}")]
+        public ContentResult datosCliente(string rut)
+        {
+            ContentResult respuesta = new ContentResult();
+            string JsonResponse;
+
+            Operaciones op = new Operaciones();
+            if (op.ValidaRut(rut))
+            {
+
+            }
+            else
+            {
+                JsonResponse = @"{""error"": { ""message"": ""Validación de Campos"", ""code"": ""OF-10"",""details"": [{"
+                                           + @"""field"": ""Error"","
+                                           + @"""issue"": ""Rut Incorrecto"" } ] } }";
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application /json";
+                respuesta.StatusCode = 400;
+                return respuesta;
+            }
+
+
+
+            string consulta = "SELECT contribuyentes_direccion.rut,contribuyentes_correo.razon_social,"
+                                + "contribuyentes_correo.correo, contribuyentes_correo.fono_contacto,"
+                                + "contribuyentes_direccion.calle,contribuyentes_direccion.numero,"
+                                + "contribuyentes_direccion.ciudad,contribuyentes_direccion.comuna,"
+                                + "contribuyentes_direccion.codigo"
+                                + " FROM contribuyentes_direccion"
+                                + " JOIN contribuyentes_correo ON contribuyentes_correo.rut = contribuyentes_direccion.rut"
+                                + @" WHERE contribuyentes_direccion.rut = """ + rut + @""""
+                                + " GROUP BY calle";
+
+            ConexionBD conexion = new ConexionBD();
+            List<string> lista_datos = conexion.Select(consulta);
+
+           
+
+            if (lista_datos.Count == 0)
+            {
+                JsonResponse = @"{""error"": { ""message"": ""Problema al procesar los datos"", ""code"": ""OF-22"",""details"": {"
+                                        + @"""message"": ""Ocurrió un error inesperado, favor de re intentar más tarde o contactese con soporte."","
+                                        + @"""code"": 500 } } }";
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application /json";
+                respuesta.StatusCode = 400;
+                return respuesta;
+
+            }
+
+
+            string consulta_acteco = @"SELECT des_actividad_economica,des_actividad_economica,codigo_actividad FROM contribuyentes_acteco WHERE rut = """+rut+@"""";
+            List<string> lista_datos_acteco = conexion.Select(consulta_acteco);
+
+
+            JsonResponse = @"{""rut"": """ + lista_datos[0] + @""",""razonSocial"": """ + lista_datos[1] + @""",""email"": """ + lista_datos[2] + @""",""telefono"": """ + lista_datos[3] + @""",""direccion"": """ + lista_datos[4] + " " + lista_datos[5] + " " + lista_datos[6] + @" "",""comuna"": """ + lista_datos[7] + @""",";
+
+            JsonResponse = JsonResponse + @"""actividades"": [";
+            //CICLO PARA ESCRIBIR LAS ACTIVIDADES ECONOMICAS
+            bool actividadPrincipal = true;
+            int contador_giro = 0, contador_actividadEconomica = 1,contador_codigo_actividad = 2;
+
+            for (int i = 0; i < lista_datos_acteco.Count / 3; i++)
+            {
+                
+                JsonResponse = JsonResponse + "{";
+                JsonResponse = JsonResponse + @"""giro"": """ + lista_datos_acteco[contador_giro] + @""",";
+                JsonResponse = JsonResponse + @"""actividadEconomica"": """ + lista_datos_acteco[contador_actividadEconomica] + @""",";
+                JsonResponse = JsonResponse + @"""codigoActividadEconomica"": """ + lista_datos_acteco[contador_codigo_actividad] + @""",";
+
+                if (actividadPrincipal)
+                {
+                  JsonResponse = JsonResponse + @"""actividadPrincipal"": true";
+                  actividadPrincipal = false;
+                }
+                else
+                {
+                  JsonResponse = JsonResponse + @"""actividadPrincipal"": false";
+                }
+               
+
+                JsonResponse = JsonResponse + "}";
+                if (i + 1 == lista_datos_acteco.Count / 3)
+                {
+                    JsonResponse = JsonResponse + "";
+                }
+                else { JsonResponse = JsonResponse + ","; }
+
+                contador_giro = contador_giro + 3;
+                contador_actividadEconomica = contador_actividadEconomica + 3;
+                contador_codigo_actividad = contador_codigo_actividad + 3;
+
+            }
+
+            JsonResponse = JsonResponse + "],";
+
+
+            JsonResponse = JsonResponse + @"""sucursales"": [";
+            //CICLO PARA ESCRIBIR LAS SUCURSALES
+            int contador_cdgSIISucur = 8, contador_comuna = 7, contador_direccion = 4,contador_direccion_numero = 5, contador_ciudad = 6, contador_telefono = 3;
+            for (int i = 0; i < lista_datos.Count / 9; i++)
+            {
+               
+
+                JsonResponse = JsonResponse + "{";
+                JsonResponse = JsonResponse + @"""cdgSIISucur"": """ + lista_datos[contador_cdgSIISucur] + @""",";
+                JsonResponse = JsonResponse + @"""comuna"": """ + lista_datos[contador_comuna] + @""",";
+                JsonResponse = JsonResponse + @"""direccion"": """ + lista_datos[contador_direccion] +" "+ lista_datos[contador_direccion_numero] +" "+ lista_datos[contador_ciudad] + @""",";
+                JsonResponse = JsonResponse + @"""ciudad"": """ + lista_datos[contador_ciudad] + @""",";
+                JsonResponse = JsonResponse + @"""telefono"": """ + lista_datos[contador_telefono] + @"""";
+
+                JsonResponse = JsonResponse + "}";
+                if (i + 1 == lista_datos.Count / 9)
+                {
+                    JsonResponse = JsonResponse + "";
+                }
+                else { JsonResponse = JsonResponse + ","; }
+
+                contador_cdgSIISucur = contador_cdgSIISucur + 9;
+                contador_comuna = contador_comuna + 9;
+                contador_direccion = contador_direccion + 9;
+                contador_direccion_numero = contador_direccion_numero + 9;
+                contador_ciudad = contador_ciudad + 9;
+                contador_telefono = contador_telefono + 9;
+
+
+            }
+
+            JsonResponse = JsonResponse + "]";
+
+            JsonResponse  =  JsonResponse + "}";
+
+            respuesta.Content = JsonResponse;
+            respuesta.ContentType = "application/json";
+            respuesta.StatusCode = 200;
+
+
+
+            return respuesta;
+        }
+
+            [HttpPost("api/dte/cargarXML")]
         public ContentResult cargarXML([FromBody] JsonElement values)
         {
             /*{
@@ -1197,10 +1339,10 @@ namespace ApiAgroDTE.Controllers
                                     if (respuestaCrearDTE[0] == "XML Valido" && respuestaCrearDTE[4] == "XML Valido")
                                     {
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                        string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
-                                        //string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
-                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
-                                        //string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
+                                        //string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
+                                        string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
+                                        //string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
+                                        string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
 
 
