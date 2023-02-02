@@ -18,13 +18,13 @@ en shemas.cs y envioDTE.cs localhost:90 (Si esta montado en el server) localhost
 PruebaControlador.cs:  
 * 35 public static string servidor_boletas = "apicert";  
 * 36 public static string servidor_facturas = "maullin";  
-* 1191 string respuestaPing = checkPing("palena.sii.cl");  
-* 1192 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
+* 1352 string respuestaPing = checkPing("palena.sii.cl");  
+* 1354 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
 
 EnvioDTE.cs
-* 376 var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");
-* 387 request.AddHeader("Host", "rahue.sii.cl"); 
-* 476 var client = new RestClient("https://api.sii.cl/recursos/v1/");
+* 388 var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");
+* 399 request.AddHeader("Host", "rahue.sii.cl"); 
+* 490 var client = new RestClient("https://api.sii.cl/recursos/v1/");
 
 
 
