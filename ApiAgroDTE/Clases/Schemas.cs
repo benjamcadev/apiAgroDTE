@@ -40,7 +40,7 @@ namespace ApiAgroDTE.Clases
 
             try
             {
-                 WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + filename + "&schemaFilename=" + schemaFileName);
+                WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + filename + "&schemaFilename=" + schemaFileName);
                 //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceValidarXML/ValidarXML.asmx/ValidarXml?xmlFilename=" + filename + "&schemaFilename=" + schemaFileName);
                 request.Method = "GET";
                 WebResponse response = request.GetResponse();
