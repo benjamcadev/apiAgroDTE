@@ -1350,7 +1350,7 @@ namespace ApiAgroDTE.Controllers
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
                                         string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
                                         //string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
-                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
+                                       string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
                                         //string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
 

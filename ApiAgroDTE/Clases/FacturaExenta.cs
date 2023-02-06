@@ -553,7 +553,7 @@ namespace ApiAgroDTE.Clases
             string nmbItem = "";
             if (detalleObjectI.NmbItem.Length > MaxLength)
             {
-                nmbItem = detalleObjectI.NmbItem.Substring(0, 40);
+                nmbItem = detalleObjectI.NmbItem.Substring(0, 39);
                 nmbItem = op.LimpiarCaracter(nmbItem);
             }
             else
