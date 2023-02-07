@@ -385,14 +385,27 @@ namespace ApiAgroDTE.Clases
             for (int i=0; i< detallesArray.Count(); i++){
 
                 Detalle detalleObject = JsonConvert.DeserializeObject<Detalle>(ListaDetalles[i].ToString());
-        
+
                 // EJEMPLO DE APLICAR detalleObject.NroLinDet
 
-               var NroLinDetStr = detalleObject.NroLinDet.ToString();
+
+
+                string NroLinDetStr = "";
+                string IndExe = "";
+
+                if (TpoDocRef == "34")
+                {
+                    IndExe = detalleObject.IndExe.ToString();
+                }
+               
+
+
+
+                NroLinDetStr = detalleObject.NroLinDet.ToString();
                 var NmbItemStr = detalleObject.NmbItem.ToString();                
                 var QtyItemStr = detalleObject.QtyItem.ToString();
                 var PrcItemStr = detalleObject.PrcItem.ToString();
-              string DescuentoPct = "";
+                string DescuentoPct = "";
                 string DescuentoMonto = "";
                 string RecargoPct = "";
                 string RecargoMonto = "";
@@ -432,6 +445,16 @@ namespace ApiAgroDTE.Clases
           
                 writer.WriteStartElement("Detalle");
                 writer.WriteElementString("NroLinDet", NroLinDetStr);
+
+                if (TpoDocRef == "34")
+                {
+                    writer.WriteElementString("IndExe", IndExe);
+                }
+                else
+                {
+                    
+                }
+                   
                
                 //SI EL DETALLE TRAE <CdgItem> LO CAPTURAMOS E INSERTAMOS -----------<<<<<<<<<<<<<<<<<<<
                 
@@ -867,6 +890,8 @@ namespace ApiAgroDTE.Clases
         public class Detalle
         {
             public int NroLinDet { get; set; }
+
+            public string IndExe { get; set; }
             public CdgItem CdgItem { get; set; }
             public string NmbItem { get; set; }
             public double QtyItem { get; set; }
