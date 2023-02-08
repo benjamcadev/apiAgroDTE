@@ -32,6 +32,8 @@ namespace ApiAgroDTE.Controllers
        maullin - Certificacion facturas token
        palena - Produccion Facturas 
        */
+
+
         public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
         public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
@@ -1350,10 +1352,21 @@ namespace ApiAgroDTE.Controllers
                                         //CHEQUEAR SI HAY CONEXION A INTERNET 
                                         string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
                                         //string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
-                                        string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
-                                        //string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
+                                        // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
+                                        //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
-
+                                        if (respuestaPing.Contains("Error"))
+                                        {
+                                            for (int i = 0; i < 3; i++)
+                                            {
+                                                respuestaPing = checkPing("maullin.sii.cl");
+                                                if (respuestaPing == "Conexion Exitosa")
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                           
+                                        }
 
                                         //if (respuestaPing == respuestaConexion)
                                         if (respuestaPing == "Conexion Exitosa")
@@ -1380,15 +1393,27 @@ namespace ApiAgroDTE.Controllers
                                                 TrackId_str = TrackId[0].InnerXml;
 
                                                 //SI EL SII ENVIA UN TRACK ID 0 EJECUTAMOS OTRA VEZ EL ENVIAR SOBRE
+
                                                 if (TrackId_str == "0")
                                                 {
-                                                    respuestaEnvio = envio.enviarSobre(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
-                                                    XmlDocument xmlDoc3 = new XmlDocument();
-                                                    xmlDoc2.LoadXml(respuestaEnvio);
-                                                    XmlNodeList TrackId2 = xmlDoc2.GetElementsByTagName("string");
-                                                    TrackId_str = TrackId2[0].InnerXml;
+                                                    for (int i = 0; i < 3; i++)
+                                                    {
+                                                        respuestaEnvio = envio.enviarSobre(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
+                                                        XmlDocument xmlDoc3 = new XmlDocument();
+                                                        xmlDoc2.LoadXml(respuestaEnvio);
+                                                        XmlNodeList TrackId2 = xmlDoc2.GetElementsByTagName("string");
+                                                        TrackId_str = TrackId2[0].InnerXml;
+                                                        if (TrackId_str != "0")
+                                                        {
+                                                            break;
+                                                        }
+                                                    }
 
                                                 }
+
+
+
+                                                
                                             }
 
 
