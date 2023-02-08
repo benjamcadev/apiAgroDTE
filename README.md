@@ -19,7 +19,6 @@ PruebaControlador.cs:
 * 35 public static string servidor_boletas = "apicert";  
 * 36 public static string servidor_facturas = "maullin";  
 * 1352 string respuestaPing = checkPing("palena.sii.cl");  
-* 1354 string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws");
 
 EnvioDTE.cs
 * 388 var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");
