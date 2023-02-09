@@ -167,16 +167,18 @@ namespace ApiAgroDTE.Clases
             {
                 nmbItem = detalleObject.NmbItem;
             }
+            Operaciones op = new Operaciones();
             string item_dd = string.Empty;
             item_dd = nmbItem;
+            item_dd = op.LimpiarCaracter(item_dd);
             item_dd = item_dd.Replace("&", "&amp;");
             item_dd = item_dd.Replace("<", "&lt;");
             item_dd = item_dd.Replace("<", "&lt;");
             item_dd = item_dd.Replace(">", "&gt;");
             item_dd = item_dd.Replace("'", "&apos;");
             item_dd = item_dd.Replace("\"", "&quot;");
-            Operaciones op = new Operaciones();
-            item_dd = op.LimpiarCaracter(item_dd);
+           
+            
 
 
 
