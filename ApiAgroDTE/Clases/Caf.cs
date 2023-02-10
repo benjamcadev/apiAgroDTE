@@ -211,13 +211,14 @@ namespace ApiAgroDTE.Clases
 
             string razonreceptor_dd = string.Empty;
             razonreceptor_dd = razonReceptor;
+            razonreceptor_dd = op.LimpiarCaracter(razonreceptor_dd);
             razonreceptor_dd = razonreceptor_dd.Replace("&", "&amp;");
             razonreceptor_dd = razonreceptor_dd.Replace("<", "&lt;");
             razonreceptor_dd = razonreceptor_dd.Replace("<", "&lt;");
             razonreceptor_dd = razonreceptor_dd.Replace(">", "&gt;");
             razonreceptor_dd = razonreceptor_dd.Replace("'", "&apos;");
             razonreceptor_dd = razonreceptor_dd.Replace("\"", "&quot;");
-            razonreceptor_dd = op.LimpiarCaracter(razonreceptor_dd);
+            
 
             byte[] tempBytes2;
             tempBytes2 = System.Text.Encoding.GetEncoding("ISO-8859-8").GetBytes(razonreceptor_dd);
@@ -228,7 +229,7 @@ namespace ApiAgroDTE.Clases
             JsonElement Emisor = Encabezado.GetProperty("Emisor");
             string rutEmisor = Emisor.GetProperty("RUTEmisor").ToString();
             string fechadocu2 = System.DateTime.Now.ToString("yyyy-MM-dd");
-            string rutReceptor = Receptor.GetProperty("RUTRecep").ToString();
+            string rutReceptor = Receptor.GetProperty("RUTRecep").ToString().ToUpper();
             //JsonElement Totales = Encabezado.GetProperty("Totales");
             //string totales = Totales.GetProperty("MntTotal").ToString();
 
