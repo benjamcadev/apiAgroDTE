@@ -385,7 +385,12 @@ namespace ApiAgroDTE.Clases
                     writer.WriteStartElement("DscRcgGlobal");
                     writer.WriteElementString("NroLinDR", NroLinDRStr);
                     writer.WriteElementString("TpoMov", TpoMovStr);
-                    writer.WriteElementString("GlosaDR", GlosaDRStr);
+
+                    if (!string.IsNullOrEmpty(GlosaDRStr))
+                    {
+                        writer.WriteElementString("GlosaDR", GlosaDRStr);
+                    }
+                  
                     writer.WriteElementString("TpoValor", TpoValorStr);
                     writer.WriteElementString("ValorDR", ValorDRStr);
                     writer.WriteEndElement();
