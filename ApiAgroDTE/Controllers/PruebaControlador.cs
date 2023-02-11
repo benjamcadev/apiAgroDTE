@@ -116,20 +116,36 @@ namespace ApiAgroDTE.Controllers
 
 
 
-            string consulta = "SELECT contribuyentes_direccion.rut,contribuyentes_correo.razon_social,"
-                                + "contribuyentes_correo.correo, contribuyentes_correo.fono_contacto,"
+            string consulta = "SELECT contribuyentes_direccion.rut,contribuyentes_acteco.razon_social,"
                                 + "contribuyentes_direccion.calle,contribuyentes_direccion.numero,"
                                 + "contribuyentes_direccion.ciudad,contribuyentes_direccion.comuna,"
                                 + "contribuyentes_direccion.codigo"
                                 + " FROM contribuyentes_direccion"
-                                + " JOIN contribuyentes_correo ON contribuyentes_correo.rut = contribuyentes_direccion.rut"
+                                + " INNER JOIN contribuyentes_acteco ON contribuyentes_acteco.rut = contribuyentes_direccion.rut" 
                                 + @" WHERE contribuyentes_direccion.rut = """ + rut + @""""
                                 + " GROUP BY calle";
 
             ConexionBD conexion = new ConexionBD();
             List<string> lista_datos = conexion.Select(consulta);
+            
 
-           
+            string consulta_correo = "SELECT correo,fono_contacto FROM contribuyentes_correo WHERE rut = \"" + rut + "\"";
+            List<string> lista_datos_correo = conexion.Select(consulta_correo);
+
+            string correo = "";
+            string fono = "";
+            if (lista_datos_correo.Count == 0)
+            {
+                correo = "0";
+                fono = "0";
+            }
+            else
+            {
+                correo = lista_datos_correo[0];
+                fono = lista_datos_correo[1];
+            }
+
+
 
             if (lista_datos.Count == 0)
             {
@@ -148,7 +164,7 @@ namespace ApiAgroDTE.Controllers
             List<string> lista_datos_acteco = conexion.Select(consulta_acteco);
 
 
-            JsonResponse = @"{""rut"": """ + lista_datos[0] + @""",""razonSocial"": """ + lista_datos[1] + @""",""email"": """ + lista_datos[2] + @""",""telefono"": """ + lista_datos[3] + @""",""direccion"": """ + lista_datos[4] + " " + lista_datos[5] + " " + lista_datos[6] + @" "",""comuna"": """ + lista_datos[7] + @""",";
+            JsonResponse = @"{""rut"": """ + lista_datos[0] + @""",""razonSocial"": """ + lista_datos[1] + @""",""email"": """ + correo + @""",""telefono"": """ + fono + @""",""direccion"": """ + lista_datos[2] + " " + lista_datos[3] + " " + lista_datos[4] + @" "",""comuna"": """ + lista_datos[5] + @""",";
 
             JsonResponse = JsonResponse + @"""actividades"": [";
             //CICLO PARA ESCRIBIR LAS ACTIVIDADES ECONOMICAS
@@ -192,8 +208,8 @@ namespace ApiAgroDTE.Controllers
 
             JsonResponse = JsonResponse + @"""sucursales"": [";
             //CICLO PARA ESCRIBIR LAS SUCURSALES
-            int contador_cdgSIISucur = 8, contador_comuna = 7, contador_direccion = 4,contador_direccion_numero = 5, contador_ciudad = 6, contador_telefono = 3;
-            for (int i = 0; i < lista_datos.Count / 9; i++)
+            int contador_cdgSIISucur = 6, contador_comuna = 5, contador_direccion = 2,contador_direccion_numero = 3, contador_ciudad = 4, contador_telefono = 3;
+            for (int i = 0; i < lista_datos.Count / 7; i++)
             {
                
 
@@ -202,21 +218,21 @@ namespace ApiAgroDTE.Controllers
                 JsonResponse = JsonResponse + @"""comuna"": """ + lista_datos[contador_comuna] + @""",";
                 JsonResponse = JsonResponse + @"""direccion"": """ + lista_datos[contador_direccion] +" "+ lista_datos[contador_direccion_numero] +" "+ lista_datos[contador_ciudad] + @""",";
                 JsonResponse = JsonResponse + @"""ciudad"": """ + lista_datos[contador_ciudad] + @""",";
-                JsonResponse = JsonResponse + @"""telefono"": """ + lista_datos[contador_telefono] + @"""";
+                JsonResponse = JsonResponse + @"""telefono"": """ + fono + @"""";
 
                 JsonResponse = JsonResponse + "}";
-                if (i + 1 == lista_datos.Count / 9)
+                if (i + 1 == lista_datos.Count / 7)
                 {
                     JsonResponse = JsonResponse + "";
                 }
                 else { JsonResponse = JsonResponse + ","; }
 
-                contador_cdgSIISucur = contador_cdgSIISucur + 9;
-                contador_comuna = contador_comuna + 9;
-                contador_direccion = contador_direccion + 9;
-                contador_direccion_numero = contador_direccion_numero + 9;
-                contador_ciudad = contador_ciudad + 9;
-                contador_telefono = contador_telefono + 9;
+                contador_cdgSIISucur = contador_cdgSIISucur + 7;
+                contador_comuna = contador_comuna + 7;
+                contador_direccion = contador_direccion + 7;
+                contador_direccion_numero = contador_direccion_numero + 7;
+                contador_ciudad = contador_ciudad + 7;
+                contador_telefono = contador_telefono + 7;
 
 
             }
