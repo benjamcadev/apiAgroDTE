@@ -399,7 +399,7 @@ namespace ApiAgroDTE.Clases
             strCadena = strCadena.Replace("/", "");
             strCadena = strCadena.Replace("Í", "I");
             strCadena = strCadena.Replace("\"", "");
-           
+            strCadena = strCadena.Replace("'", "");
 
 
 

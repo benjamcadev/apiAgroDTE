@@ -572,6 +572,7 @@ namespace ApiAgroDTE.Clases
             if (razonReceptor.Length > MaxLength)
             {
                 razonReceptor = razonReceptor.Substring(0, 39);
+                razonReceptor = op.LimpiarCaracter(razonReceptor);
             }
             else
             {
