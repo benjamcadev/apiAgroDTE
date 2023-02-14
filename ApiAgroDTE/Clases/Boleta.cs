@@ -316,14 +316,16 @@ namespace ApiAgroDTE.Clases
 
                 if (SubRecargoFlag == true)
                 {
+                    if (SubRecargoOp is not null)
+                    {
+                        var TipoRecargo = SubRecargoOp.TipoRecargo.ToString();
+                        var ValorRecargo = SubRecargoOp.ValorRecargo.ToString();
 
-                    var TipoRecargo = SubRecargoOp.TipoRecargo.ToString();
-                    var ValorRecargo = SubRecargoOp.ValorRecargo.ToString();
-
-                    writer.WriteStartElement("SubRecargo");
-                    writer.WriteElementString("TipoRecargo", TipoRecargo);
-                    writer.WriteElementString("ValorRecargo", ValorRecargo);
-                    writer.WriteEndElement();
+                        writer.WriteStartElement("SubRecargo");
+                        writer.WriteElementString("TipoRecargo", TipoRecargo);
+                        writer.WriteElementString("ValorRecargo", ValorRecargo);
+                        writer.WriteEndElement();
+                    }
 
                 }
 

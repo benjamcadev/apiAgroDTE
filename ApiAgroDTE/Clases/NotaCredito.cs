@@ -515,15 +515,18 @@ namespace ApiAgroDTE.Clases
                     }
                 }
                  if (SubDsctoFlag == true) 
-                {        
-                        
-                    var TipoDscto = SubDsctoOp.TipoDscto.ToString();
-                    var ValorDscto = SubDsctoOp.ValorDscto.ToString(); 
+                {
+                    if (SubDsctoOp is not null)
+                    {
 
-                    writer.WriteStartElement("SubDscto");
-                    writer.WriteElementString("TipoDscto", TipoDscto);
-                    writer.WriteElementString("ValorDscto", ValorDscto);
-                    writer.WriteEndElement();               
+                        var TipoDscto = SubDsctoOp.TipoDscto.ToString();
+                        var ValorDscto = SubDsctoOp.ValorDscto.ToString();
+
+                        writer.WriteStartElement("SubDscto");
+                        writer.WriteElementString("TipoDscto", TipoDscto);
+                        writer.WriteElementString("ValorDscto", ValorDscto);
+                        writer.WriteEndElement();
+                    }
                     
                 }
 
@@ -551,15 +554,17 @@ namespace ApiAgroDTE.Clases
                 }      
                
                 if (SubRecargoFlag == true)
-                {              
-                        
-                    var TipoRecargo = SubRecargoOp.TipoRecargo.ToString();
-                    var ValorRecargo = SubRecargoOp.ValorRecargo.ToString(); 
+                {
+                    if (SubRecargoOp is not null)
+                    {
+                        var TipoRecargo = SubRecargoOp.TipoRecargo.ToString();
+                        var ValorRecargo = SubRecargoOp.ValorRecargo.ToString();
 
-                    writer.WriteStartElement("SubRecargo");
-                    writer.WriteElementString("TipoRecargo", TipoRecargo);
-                    writer.WriteElementString("ValorRecargo", ValorRecargo);
-                    writer.WriteEndElement();                  
+                        writer.WriteStartElement("SubRecargo");
+                        writer.WriteElementString("TipoRecargo", TipoRecargo);
+                        writer.WriteElementString("ValorRecargo", ValorRecargo);
+                        writer.WriteEndElement();
+                    }
                    
                 }
             
