@@ -1672,7 +1672,7 @@ namespace ApiAgroDTE.Controllers
                                     else if (respuestaCrearDTE[0].Contains("XML Invalido:") || respuestaCrearDTE[4].Contains("XML Invalido:"))
                                     {//se agregan 3 guiones "---" para separar los errores del dte que va al si, con el dte que va al cliente, cualquiera de los 2 puede tener errores
                                      //XML RECHAZADO SCHEMA
-                                        string JsonResponse = @"{""error"": {""message"": ""Validación de Esquema"",""code"": ""OF-08"",""details"": [{""field"": ""Error de Schema"",""issue"": " + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + "}]}}";
+                                        string JsonResponse = @"{""error"": {""message"": ""Validación de Esquema"",""code"": ""OF-08"",""details"": [{""field"": ""Error de Schema"",""issue"": """ + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + @"""}]}}";
 
                                         respuesta.Content = JsonResponse;
                                         respuesta.ContentType = "application/json";
@@ -1687,7 +1687,7 @@ namespace ApiAgroDTE.Controllers
                                     }
                                     else if (respuestaCrearDTE[0].Contains("Error") || respuestaCrearDTE[4].Contains("Error"))
                                     {//se agregan 3 guiones "---" para separar los errores del dte que va al si, con el dte que va al cliente, cualquiera de los 2 puede tener errores
-                                        string JsonResponse = @"{""error"": {""message"": ""Validacion de Montos"",""code"": ""OF-09"",""details"": [{""field"": ""Error de Operacion"",""issue"": " + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + "}]}}";
+                                        string JsonResponse = @"{""error"": {""message"": ""Validacion de Montos"",""code"": ""OF-09"",""details"": [{""field"": ""Error de Operacion"",""issue"": """ + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + @"""}]}}";
 
                                         respuesta.Content = JsonResponse;
                                         respuesta.ContentType = "application/json";
@@ -1702,7 +1702,7 @@ namespace ApiAgroDTE.Controllers
                                     }
                                     else
                                     {//se agregan 3 guiones "---" para separar los errores del dte que va al si, con el dte que va al cliente, cualquiera de los 2 puede tener errores
-                                        string JsonResponse = @"{""error"": {""message"": ""Error no controlado"",""code"": ""OF-666"",""details"": [{""field"": ""Error Desconocido"",""issue"": " + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + "}]}}";
+                                        string JsonResponse = @"{""error"": {""message"": ""Error no controlado"",""code"": ""OF-666"",""details"": [{""field"": ""Error Desconocido"",""issue"": """ + respuestaCrearDTE[0] + "---" + respuestaCrearDTE[4] + @"""}]}}";
 
                                         respuesta.Content = JsonResponse;
                                         respuesta.ContentType = "application/json";
