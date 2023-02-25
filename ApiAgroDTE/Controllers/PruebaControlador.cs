@@ -854,7 +854,11 @@ namespace ApiAgroDTE.Controllers
             var result = JsonConvert.DeserializeObject<JObject>(values.ToString());
             var tipo_dte = result["tipo_dte"];
             var path = result["path"];
-           
+
+            //MODIFICACION 24-02-2023 ESTAS VARIABLES SE CREARON PARA EL CASO DE DTE COMPRA
+            var folio = result["folio"];
+            var compra_dte = result["compra_dte"];
+
 
             if (path == null || tipo_dte == null)
             {
@@ -882,11 +886,26 @@ namespace ApiAgroDTE.Controllers
             else
             {
                 PDF pdf = new PDF();
-                string pdf_base64 = pdf.CrearPDF(path_archivo);
-                JsonResponse = @"{""statusCode"": 200,""pdf_base64"": """ + pdf_base64 + @""", ""tipo_dte"": """+tipo_dte_str+@"""}";
-                respuesta.Content = JsonResponse;
-                respuesta.ContentType = "application/json";
-                respuesta.StatusCode = 200;
+                string pdf_base64 = "";
+
+                //ESTO SE MODIFICO 24-02-2023 PARA PODER VISUALIZAR DTE DE COMPRA CON VARIOS DTE EN EL MISMO XML
+                if (compra_dte == null )
+                {
+                    pdf_base64 = pdf.CrearPDF(path_archivo);
+                    JsonResponse = @"{""statusCode"": 200,""pdf_base64"": """ + pdf_base64 + @""", ""tipo_dte"": """ + tipo_dte_str + @"""}";
+                    respuesta.Content = JsonResponse;
+                    respuesta.ContentType = "application/json";
+                    respuesta.StatusCode = 200;
+                }
+                else
+                {
+                    pdf_base64 = pdf.CrearPDFCompra(path_archivo,folio.ToString());
+                    JsonResponse = @"{""statusCode"": 200,""pdf_base64"": """ + pdf_base64 + @""", ""tipo_dte"": """ + tipo_dte_str + @"""}";
+                    respuesta.Content = JsonResponse;
+                    respuesta.ContentType = "application/json";
+                    respuesta.StatusCode = 200;
+                }
+                    
             }
 
 

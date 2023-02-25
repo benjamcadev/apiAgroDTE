@@ -13,6 +13,7 @@ using Rectangle = iTextSharp.text.Rectangle;
 using System.Xml.XPath;
 using ApiAgroDTE.Clases;
 
+
 namespace ApiAgroDTE.Clases
 {
     public class PDF
@@ -70,24 +71,34 @@ namespace ApiAgroDTE.Clases
                 //string path = "C:\\Users\\Marcelo Riquelme\\source\\repos\\ConsoleApp1\\DTE 34 - Empresa 76795561 - Folio Nº 101882.xml";
 
                 documentoXml.Load(path);
-                
+
                 // Creamos el documento con el tamaño de página tradicional
                 Document documentoPDF = new Document(PageSize.LETTER, 20f, 20f, 20f, 20f);
+                //Document documentoPDF = new Document();
 
                 string fileNameXml = Path.GetFileName(path);
                 string fileNamePdf = fileNameXml.Replace(".xml", ".pdf");
                 // Indicamos donde vamos a guardar el documento
+
+
                
-            
 
                 string respuesta_directorio = crearDirectorio();
+
+
 
                 string directorio_pdf = respuesta_directorio +"\\" + fileNamePdf;
 
                 PdfWriter writer;
-                writer = PdfWriter.GetInstance(documentoPDF, new FileStream(directorio_pdf, FileMode.Create));
                
+                writer = PdfWriter.GetInstance(documentoPDF, new FileStream(directorio_pdf, FileMode.Create));
+
+
+
+
                 
+
+
 
                 // Le colocamos el título y el autor
                 // **Nota: Esto no será visible en el documento
@@ -124,7 +135,7 @@ namespace ApiAgroDTE.Clases
                 //LLAMAMOS LA FUNCION DEPENDIENDO DE LAS PAGINAS
                 for (int pagina = 0; pagina < ejemplares; pagina++)
                 {
-                    GenerarDocumento(documentoPDF, documentoXml, observaciones, writer, pagina);
+                   GenerarDocumento(documentoPDF, documentoXml, observaciones, writer, pagina);
                     documentoPDF.NewPage();
                 }
 
@@ -141,6 +152,142 @@ namespace ApiAgroDTE.Clases
             catch (Exception e)
                 {
                     return e.Message;
+
+            }
+        }
+
+        public string CrearPDFCompra(string path,string folio_compra)
+        {
+            try
+            {
+                string observaciones = "";
+
+                ConexionBD conexion = new ConexionBD();
+
+                XmlDocument documentoXml = new XmlDocument();
+                //string path = "C:\\Users\\Marcelo Riquelme\\source\\repos\\ConsoleApp1\\DTE 34 - Empresa 76795561 - Folio Nº 101882.xml";
+
+                documentoXml.Load(path);
+
+               
+
+               
+
+
+                // Creamos el documento con el tamaño de página tradicional
+                Document documentoPDF = new Document(PageSize.LETTER, 20f, 20f, 20f, 20f);
+                //Document documentoPDF = new Document();
+
+                string fileNameXml = Path.GetFileName(path);
+                string fileNamePdf = fileNameXml.Replace(".xml", ".pdf");
+                // Indicamos donde vamos a guardar el documento
+
+
+
+
+                string respuesta_directorio = crearDirectorio();
+
+
+
+                string directorio_pdf = respuesta_directorio + "\\" + fileNamePdf;
+
+                PdfWriter writer;
+
+                writer = PdfWriter.GetInstance(documentoPDF, new FileStream(directorio_pdf, FileMode.Create));
+
+
+
+
+
+
+
+
+                // Le colocamos el título y el autor
+                // **Nota: Esto no será visible en el documento
+                documentoPDF.AddTitle("PDF");
+                documentoPDF.AddCreator("AGROPLASTIC");
+
+                // ABRIMOS EL DOCUMENTO
+                documentoPDF.Open();
+
+                // SELECCIONAMOS EL TIPO DE DOCUMENTO Y SI ES TRANSPORTE, EL TIPO DE TRANSPORTE
+                XmlNodeList TipoDTEList = documentoXml.GetElementsByTagName("TipoDTE");
+                XmlNodeList TransporteList = documentoXml.GetElementsByTagName("Transporte");
+
+                int ejemplares = 0;
+                string IndTraslado = "";
+                string TipoDTE = TipoDTEList[0].InnerXml;
+
+                if (TransporteList.Count != 0)
+                {
+                    XmlNodeList IndTrasladoList = documentoXml.GetElementsByTagName("IndTraslado");
+
+                    if (IndTrasladoList.Count != 0)
+                    {
+                        IndTraslado = IndTrasladoList[0].InnerXml;
+                    }
+
+                    
+                }
+
+                // INDICAMOS LA CANTIDAD DE PAGINAS, DEPENDIENDO DEL DOCUMENTO
+                if (TipoDTE == "56" || TipoDTE == "61" || IndTraslado == "5" || IndTraslado == "6")
+                {
+                    ejemplares = 1;
+                }
+                else
+                {
+                    ejemplares = 2;
+                }
+
+                //LLAMAMOS LA FUNCION DEPENDIENDO DE LAS PAGINAS
+                for (int pagina = 0; pagina < ejemplares; pagina++)
+                {
+                    //AQUI VEMOS SI EL XML VIENEN MAS DTE DENTRO DEL SOBRE
+                    XmlNodeList DTEList = documentoXml.GetElementsByTagName("DTE");
+                    //int count_DTEList = DTEList.Count;
+
+                    //if (count_DTEList > 1)
+                    //{
+
+
+                        foreach (XmlNode dte in DTEList)
+                        {
+
+                            string dte_str = dte.ChildNodes[0].OuterXml;
+                            XmlDocument documentoXML_DTE = new XmlDocument();
+                            documentoXML_DTE.LoadXml(dte_str);
+                            XmlNodeList Folio_list = documentoXML_DTE.GetElementsByTagName("Folio");
+
+                            string folio_dte = Folio_list[0].InnerXml;
+
+                            if (folio_compra == folio_dte)
+                            {
+                                GenerarDocumento(documentoPDF, documentoXML_DTE, observaciones, writer, pagina);
+                                documentoPDF.NewPage();
+                            }
+
+
+
+                        }
+
+                    //}
+                   
+                }
+
+                // CERRAMOS EL DOCUMENTO Y TERMINAMOS DE ESCRIBIR EN EL
+                documentoPDF.Close();
+                writer.Close();
+
+                //DEVOLVER EL PDF CONVERTIDO EN BASE64
+                Byte[] bytes = File.ReadAllBytes(directorio_pdf);
+                string file_pdf = Convert.ToBase64String(bytes);
+
+                return file_pdf;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
 
             }
         }
@@ -185,7 +332,7 @@ namespace ApiAgroDTE.Clases
             // VARIABLES --------------------------------------
             TextInfo ti = CultureInfo.CurrentCulture.TextInfo;// SOLO SE USA PARA DARLE FORMATO A LA FECHA
 
-            XmlNodeList rutEmisorList = documentoXml.GetElementsByTagName("RutEmisor");
+            XmlNodeList rutEmisorList = documentoXml.GetElementsByTagName("RUTEmisor");
             XmlNodeList dirOrigenList = documentoXml.GetElementsByTagName("DirOrigen");//cambiar
             XmlNodeList cmnaOrigenList = documentoXml.GetElementsByTagName("CmnaOrigen");//cambiar
             XmlNodeList ciudadOrigenList = documentoXml.GetElementsByTagName("CiudadOrigen");
@@ -199,7 +346,9 @@ namespace ApiAgroDTE.Clases
             int rut3 = int.Parse(rut1);
             string rut4 = rut3.ToString("N0", new CultureInfo("es-CL"));
             string rutEmisor = rut4 + rut2;
-            string strRazonSocial = "SELECT des_actividad_economica,razon_social FROM contribuyentes_acteco WHERE rut ='" + rut1 + "'";//cambiar consultas                    
+
+            //EN DESHUSO COLOCAMOS ESTA CONSULTA PARA TRAER LOS DATOS DE LA BD
+            //string strRazonSocial = "SELECT des_actividad_economica,razon_social FROM contribuyentes_acteco WHERE rut ='" + rut1 + "'";//cambiar consultas                    
 
             string header1 = "--";
             string header2 = "--";
@@ -227,15 +376,31 @@ namespace ApiAgroDTE.Clases
                  
             }
             else
-            {              
-                                
-                List<string> resultStrRazonSocial = conexion.Select(strRazonSocial);
+            {
+                //MODIFICAMOS PARA QUE SAQUE LA INFORMACION DESDE EL XML EN VES DE LA BASE DE DATOS
+                //List<string> resultStrRazonSocial = conexion.Select(strRazonSocial);
 
-                if (resultStrRazonSocial.Any())
+                /*if (resultStrRazonSocial.Any())
+             {
+                 header1 = resultStrRazonSocial[1].ToUpper();
+                 header2 = resultStrRazonSocial[0].ToUpper();
+             }*/
+
+                //NUEVO CODIGO
+                //TRAEMOS RAZON SOCIAL Y GIRO DESDE EL XML
+                XmlNodeList RznSocList = documentoXml.GetElementsByTagName("RznSoc");
+                if (RznSocList.Count != 0)
                 {
-                    header1 = resultStrRazonSocial[1].ToUpper();
-                    header2 = resultStrRazonSocial[0].ToUpper();
+                    header1 = RznSocList[0].InnerXml;
                 }
+                XmlNodeList GiroEmisList = documentoXml.GetElementsByTagName("GiroEmis");
+                if (GiroEmisList.Count != 0)
+                {
+                    header2 = GiroEmisList[0].InnerXml;
+                }
+
+
+             
 
                 if (dirOrigenList.Count != 0)
                 {
@@ -490,10 +655,22 @@ namespace ApiAgroDTE.Clases
             }
 
             string TelRecep = "";
-            if (TelRecepList.Count != 0) //opcional
+
+            if (RUTRecepList[0].InnerXml == "76958430-7")
             {
-                TelRecep = ": " + TelRecepList[0].InnerXml;
+                TelRecep = "222189";
             }
+            else
+            {
+                if (TelRecepList.Count != 0) //opcional
+                {
+                    TelRecep = ": " + TelRecepList[0].InnerXml;
+                }
+            }
+           
+
+            
+
 
             if (FrmaPago == "1")
             {
@@ -1033,10 +1210,30 @@ namespace ApiAgroDTE.Clases
                 XmlNodeList IndTrasladoList = documentoXml.GetElementsByTagName("IndTraslado");
                 XmlNodeList TipoDespachoList = documentoXml.GetElementsByTagName("TipoDespacho");
 
-                string DirDest = DirDestList[0].InnerXml;
-                string CmnaDest = CmnaDestList[0].InnerXml;
-                string IndTraslado = IndTrasladoList[0].InnerXml;
-                string TipoDespacho = TipoDespachoList[0].InnerXml;
+
+                string CmnaDest = "--";
+                string IndTraslado = "--";
+                string TipoDespacho = "--";
+                string DirDest = "--";
+
+                if (DirDestList.Count != 0)
+                {
+                   DirDest = DirDestList[0].InnerXml;
+                }
+                if (CmnaDestList.Count != 0)
+                {
+                    CmnaDest = CmnaDestList[0].InnerXml;
+                }
+                if (IndTrasladoList.Count != 0)
+                {
+                    IndTraslado = IndTrasladoList[0].InnerXml;
+                }
+                if (TipoDespachoList.Count != 0)
+                {
+                    TipoDespacho = TipoDespachoList[0].InnerXml;
+                }
+
+
 
                 if (IndTraslado == "1")
                 {
@@ -1181,17 +1378,26 @@ namespace ApiAgroDTE.Clases
                 }
                 else
                 {
-                    if (CodRefList[0].InnerXml == "1")
+                    //MODIFICACION 24-02-2023 SE COLOCA OPCIONAL EL CODIGO DE REFERENCIA
+
+                    if (CodRefList.Count != 0 && TpoDocRef != "801")
                     {
-                        RazonRef ="Anula documento de referencia";
+                        if (CodRefList[0].InnerXml == "1")
+                        {
+                            RazonRef = "Anula documento de referencia";
+                        }
+                        if (CodRefList[0].InnerXml == "2")
+                        {
+                            RazonRef = "Corrige texto documento de referencia";
+                        }
+                        if (CodRefList[0].InnerXml == "3")
+                        {
+                            RazonRef = "Corrige montos";
+                        }
                     }
-                    if (CodRefList[0].InnerXml == "2")
+                    else
                     {
-                        RazonRef = "Corrige texto documento de referencia";
-                    }
-                    if (CodRefList[0].InnerXml == "3")
-                    {
-                        RazonRef = "Corrige montos";
+                        RazonRef = "Trazabilidad";
                     }
                 }        
 
