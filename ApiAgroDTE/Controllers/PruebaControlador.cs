@@ -1394,11 +1394,13 @@ namespace ApiAgroDTE.Controllers
                                         {
                                             for (int i = 0; i < 3; i++)
                                             {
-                                                respuestaPing = checkPing("maullin.sii.cl");
+                                                respuestaPing = checkPing("palena.sii.cl");
+
                                                 if (respuestaPing == "Conexion Exitosa")
                                                 {
                                                     break;
                                                 }
+                                                Thread.Sleep(1500);
                                             }
                                            
                                         }
