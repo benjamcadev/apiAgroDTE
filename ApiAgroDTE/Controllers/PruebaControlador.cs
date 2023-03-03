@@ -1392,7 +1392,7 @@ namespace ApiAgroDTE.Controllers
 
                                         if (respuestaPing.Contains("Error"))
                                         {
-                                            for (int i = 0; i < 3; i++)
+                                            for (int i = 0; i < 5; i++)
                                             {
                                                 respuestaPing = checkPing("palena.sii.cl");
 
