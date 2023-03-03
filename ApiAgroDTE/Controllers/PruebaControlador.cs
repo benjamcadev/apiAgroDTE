@@ -1584,6 +1584,13 @@ namespace ApiAgroDTE.Controllers
                                                     writetext.WriteLine("Sin Request");
                                                     writetext.Close();
                                                 }
+
+                                                //GUARDA LAS RESPONSE CON CONEXION
+                                                string hora_actual_response_con_conexion = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                                using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Con_conexion_" + hora_actual_response_con_conexion + ".txt"))
+                                                {
+                                                    writetext.WriteLine(respuesta.Content);
+                                                }
                                                 return respuesta;
                                             }
 
@@ -1685,6 +1692,14 @@ namespace ApiAgroDTE.Controllers
                                         {
                                             writetext.WriteLine("Sin Request");
                                             writetext.Close();
+                                        }
+
+
+                                        //GUARDA LAS RESPONSE DE SIN CONEXION
+                                        string hora_actual_response_sin_conexion = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                        using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Sin_conexion_" + hora_actual_response_sin_conexion + ".txt"))
+                                        {
+                                            writetext.WriteLine(respuesta.Content);
                                         }
 
                                         return respuesta;
