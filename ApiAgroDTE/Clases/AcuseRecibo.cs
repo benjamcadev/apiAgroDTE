@@ -474,16 +474,21 @@ namespace ApiAgroDTE.Clases
 
             try
             {
+                //TRAER EL CORREO Y PASS DESDE LA BD
+
+                //ConexionBD conexion = new ConexionBD();
+                List<string> respuesta_correo = new List<string>();
+                respuesta_correo = conexion.Select("SELECT mail_intercambio_empresa,pass_intercambio_empresa FROM empresa WHERE id_empresa = 1");
 
                 SmtpClient mySmtpClient = new SmtpClient("mail.agroplastic.cl");
 
                 // set smtp-client with basicAuthentication
                 mySmtpClient.UseDefaultCredentials = false;
-                System.Net.NetworkCredential basicAuthenticationInfo = new System.Net.NetworkCredential("intercambiodte@agroplastic.cl", "agr0835$1069");
+                System.Net.NetworkCredential basicAuthenticationInfo = new System.Net.NetworkCredential(respuesta_correo[0], respuesta_correo[1]);
                 mySmtpClient.Credentials = basicAuthenticationInfo;
 
                 // add from,to mailaddresses
-                MailAddress from = new MailAddress("intercambiodte@agroplastic.cl", "AgroDTE");
+                MailAddress from = new MailAddress(respuesta_correo[0], "AgroDTE");
                 //MailAddress to = new MailAddress("bmcortes@agroplastic.cl, mriquelme@agroplastic.cl", "Benjamin");
                 MailMessage myMail = new MailMessage();
                 myMail.To.Add(strCorreoDestino);
