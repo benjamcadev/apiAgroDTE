@@ -1295,6 +1295,13 @@ namespace ApiAgroDTE.Controllers
                                         writetext.Close();
                                     }
 
+                                    //GUARDA LAS RESPONSE ERROR SIN KEY DTE
+                                    string hora_actual_response_error_sin_key_dte = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                    using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_SinKey_DTE_" + hora_actual_response_error_sin_key_dte + ".txt"))
+                                    {
+                                        writetext.WriteLine(respuesta.Content);
+                                    }
+
                                     return respuesta;
                                 }
 
@@ -1355,6 +1362,13 @@ namespace ApiAgroDTE.Controllers
                                         {
                                             writetext.WriteLine("Sin Request");
                                             writetext.Close();
+                                        }
+
+                                        //GUARDA LAS RESPONSE ERROR CREAR DIRECTORIO DE ARCHIVOS
+                                        string hora_actual_response_error_directorio = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                        using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_Directorio_AgroDTE_" + hora_actual_response_error_directorio + ".txt"))
+                                        {
+                                            writetext.WriteLine(respuesta.Content);
                                         }
 
                                         return respuesta;
@@ -1592,7 +1606,13 @@ namespace ApiAgroDTE.Controllers
                                                     writetext.Close();
                                                 }
 
-                                                
+                                                //GUARDA LAS RESPONSE ERROR TRACK ID
+                                                string hora_actual_response_error_track_id = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                                using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_numeroTrackid_" + hora_actual_response_error_track_id + ".txt"))
+                                                {
+                                                    writetext.WriteLine(respuesta.Content);
+                                                }
+
                                                 return respuesta;
                                             }
 
@@ -1721,6 +1741,14 @@ namespace ApiAgroDTE.Controllers
                                             writetext.WriteLine("Sin Request");
                                             writetext.Close();
                                         }
+
+                                        //GUARDA LAS RESPONSE ERROR DE ESQUEMA O SCHEMA
+                                        string hora_actual_response_error_schema = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                        using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_Schema_" + hora_actual_response_error_schema + ".txt"))
+                                        {
+                                            writetext.WriteLine(respuesta.Content);
+                                        }
+
                                         return respuesta;
                                     }
                                     else if (respuestaCrearDTE[0].Contains("Error") || respuestaCrearDTE[4].Contains("Error"))
@@ -1736,6 +1764,15 @@ namespace ApiAgroDTE.Controllers
                                             writetext.WriteLine("Sin Request");
                                             writetext.Close();
                                         }
+
+                                        //GUARDA LAS RESPONSE ERROR DE OPERACION
+                                        string hora_actual_response_error_operacion = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                        using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_Operacion_" + hora_actual_response_error_operacion + ".txt"))
+                                        {
+                                            writetext.WriteLine(respuesta.Content);
+                                        }
+
+
                                         return respuesta;
                                     }
                                     else
@@ -1751,6 +1788,14 @@ namespace ApiAgroDTE.Controllers
                                             writetext.WriteLine("Sin Request");
                                             writetext.Close();
                                         }
+
+                                        //GUARDA LAS RESPONSE ERROR NO CONTROLADO
+                                        string hora_actual_response_error_no_controlado = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                        using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_No_Controlado_" + hora_actual_response_error_no_controlado + ".txt"))
+                                        {
+                                            writetext.WriteLine(respuesta.Content);
+                                        }
+
                                         return respuesta;
                                     }
                                 }
@@ -1767,6 +1812,14 @@ namespace ApiAgroDTE.Controllers
                                         writetext.WriteLine("Sin Request");
                                         writetext.Close();
                                     }
+
+                                    //GUARDA LAS RESPONSE ERROR SIN KEY
+                                    string hora_actual_response_error_sin_key = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                    using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Error_SinKey_" + hora_actual_response_error_sin_key + ".txt"))
+                                    {
+                                        writetext.WriteLine(respuesta.Content);
+                                    }
+
                                     return respuesta;
                                 }
 
@@ -1781,6 +1834,13 @@ namespace ApiAgroDTE.Controllers
                                 }
 
                                 r = true;
+
+                                //GUARDA LAS RESPONSE DESCONOCIDO
+                                string hora_actual_response_desconocida = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+                                using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Desconocido_" + hora_actual_response_desconocida + ".txt"))
+                                {
+                                    writetext.WriteLine(respuesta.Content);
+                                }
 
                                 return respuesta;
                                 //break;
@@ -1820,6 +1880,13 @@ namespace ApiAgroDTE.Controllers
 
             }
             // -------------------------------------------------------------------------------------------------------
+
+            //GUARDA LAS RESPONSE DESCONOCIDO
+            string hora_actual_response_desconocida_2 = DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss_fff");
+            using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\Response_Desconocido_2" + hora_actual_response_desconocida_2 + ".txt"))
+            {
+                writetext.WriteLine(respuesta.Content);
+            }
             return respuesta;
 
         }
