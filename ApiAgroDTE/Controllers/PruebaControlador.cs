@@ -1566,7 +1566,9 @@ namespace ApiAgroDTE.Controllers
                                                     writetext.WriteLine(respuesta.Content);
                                                 }*/
 
-                                                string log_Response3 = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Response Con Conexion',NOW(),'- ','" + respuesta.Content + "')";
+                                               
+
+                                                string log_Response3 = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Response Con Conexion',NOW(),'- ','" + respuesta.Content.ToString() + "')";
                                                 conexion.Consulta(log_Response3);
 
                                                 return respuesta;
