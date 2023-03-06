@@ -125,12 +125,14 @@ namespace ApiAgroDTE.Controllers
                                 + @" WHERE contribuyentes_direccion.rut = """ + rut + @""""
                                 + " GROUP BY calle";
 
-            ConexionBD conexion = new ConexionBD();
-            List<string> lista_datos = conexion.Select(consulta);
+            //ConexionBD conexion = new ConexionBD();
+            //APUNTAMOS A OTRO SERVIDOR PARA NO CARGAR AL SERVIDOR PRINCIPAL
+            ConexionBD_2 conexion2 = new ConexionBD_2();
+            List<string> lista_datos = conexion2.Select(consulta);
             
 
             string consulta_correo = "SELECT correo,fono_contacto FROM contribuyentes_correo WHERE rut = \"" + rut + "\"";
-            List<string> lista_datos_correo = conexion.Select(consulta_correo);
+            List<string> lista_datos_correo = conexion2.Select(consulta_correo);
 
             string correo = "";
             string fono = "";
@@ -161,7 +163,7 @@ namespace ApiAgroDTE.Controllers
 
 
             string consulta_acteco = @"SELECT des_actividad_economica,des_actividad_economica,codigo_actividad FROM contribuyentes_acteco WHERE rut = """+rut+@"""";
-            List<string> lista_datos_acteco = conexion.Select(consulta_acteco);
+            List<string> lista_datos_acteco = conexion2.Select(consulta_acteco);
 
 
             JsonResponse = @"{""rut"": """ + lista_datos[0] + @""",""razonSocial"": """ + lista_datos[1] + @""",""email"": """ + correo + @""",""telefono"": """ + fono + @""",""direccion"": """ + lista_datos[2] + " " + lista_datos[3] + " " + lista_datos[4] + @" "",""comuna"": """ + lista_datos[5] + @""",";

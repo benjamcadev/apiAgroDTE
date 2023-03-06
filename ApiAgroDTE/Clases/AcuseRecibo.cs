@@ -419,7 +419,8 @@ namespace ApiAgroDTE.Clases
         {
             //
             // ESTA FUNCION, RECIBE EL PATH EL RUT A QUIEN VA DIRIGIDO EL XM (A SEA ACUSE DE RECIBO O EL DTE PARA ENVIAR AL CLIENTE) Y UN MENSAJE, QUE PUEDE SER VACIO, ERROR, O XML CLIENTE() INDICANDO QUE LO QUE VIENE ES UN DTE PARA ENVIAR AL CLIENTE.
-            ConexionBD conexion = new ConexionBD();
+            //ConexionBD conexion = new ConexionBD();
+            ConexionBD_2 conexion2 = new ConexionBD_2();
             string query_correoDestino = "SELECT correo FROM contribuyentes_correo WHERE rut='"+ rutDestino + "'";
             string asunto = "Acuse recibo DTE";
             string strCorreoDestino="";
@@ -428,7 +429,7 @@ namespace ApiAgroDTE.Clases
 // SI mensaje VIENE VACIO, SE BUSCA EL CORREO DEL CLIENTE Y SE LE ENVIA ACUSE DE RECIBO
             if(mensaje == "")
             {
-                List<string> listCorreoDestino = conexion.Select(query_correoDestino);
+                List<string> listCorreoDestino = conexion2.Select(query_correoDestino);
                 if(listCorreoDestino.Count != 0){
                     strCorreoDestino = listCorreoDestino[0];
                 }
@@ -448,7 +449,7 @@ namespace ApiAgroDTE.Clases
             {
                 asunto = "Entrega XML DTE Agroplastic";
 
-                List<string> listCorreoDestino = conexion.Select(query_correoDestino);
+                List<string> listCorreoDestino = conexion2.Select(query_correoDestino);
                 if (listCorreoDestino.Count != 0)
                 {
                     strCorreoDestino = listCorreoDestino[0];
@@ -476,7 +477,7 @@ namespace ApiAgroDTE.Clases
             {
                 //TRAER EL CORREO Y PASS DESDE LA BD
 
-                //ConexionBD conexion = new ConexionBD();
+                ConexionBD conexion = new ConexionBD();
                 List<string> respuesta_correo = new List<string>();
                 respuesta_correo = conexion.Select("SELECT mail_intercambio_empresa,pass_intercambio_empresa FROM empresa WHERE id_empresa = 1");
 
