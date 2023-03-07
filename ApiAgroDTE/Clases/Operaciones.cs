@@ -138,6 +138,11 @@ namespace ApiAgroDTE.Clases
             {
                 Totales = conexion.Select("SELECT mnttotal_factura_exenta FROM factura_exenta WHERE folio_factura_exenta = '" + FolioRef + "' ");
             }
+            else if (TpoDocRef == "56")
+            {
+                Totales = conexion.Select("SELECT mnttotal_nota_debito FROM nota_debito WHERE folio_nota_debito = '" + FolioRef + "' ");
+            }
+
             else
             {
                 Totales = conexion.Select("SELECT mnttotal_factura FROM factura WHERE folio_factura = '" + FolioRef + "' ");
@@ -203,6 +208,10 @@ namespace ApiAgroDTE.Clases
              else if (TpoDocRef == "34")
             {
                 Totales = conexion.Select("SELECT mnttotal_factura_exenta FROM factura_exenta WHERE folio_factura_exenta = '" + FolioRef + "' ");
+            }
+            else if (TpoDocRef == "56")
+            {
+                Totales = conexion.Select("SELECT mnttotal_nota_debito FROM nota_debito WHERE folio_nota_debito = '" + FolioRef + "' ");
             }
             else
             {
