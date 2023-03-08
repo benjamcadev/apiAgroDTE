@@ -1422,7 +1422,7 @@ namespace ApiAgroDTE.Controllers
 
                                                 //SI EL SII ENVIA UN TRACK ID 0 EJECUTAMOS OTRA VEZ EL ENVIAR SOBRE
 
-                                                if (TrackId_str == "0")
+                                                if (TrackId_str == "0" || TrackId_str == "HEFESTO.DTE.AUTENTICACION.ENT.Respuesta")
                                                 {
                                                     for (int i = 0; i < 2; i++)
                                                     {
@@ -1431,7 +1431,7 @@ namespace ApiAgroDTE.Controllers
                                                         xmlDoc2.LoadXml(respuestaEnvio);
                                                         XmlNodeList TrackId2 = xmlDoc2.GetElementsByTagName("string");
                                                         TrackId_str = TrackId2[0].InnerXml;
-                                                        if (TrackId_str != "0")
+                                                        if (TrackId_str != "0" || TrackId_str != "HEFESTO.DTE.AUTENTICACION.ENT.Respuesta")
                                                         {
                                                             break;
                                                         }
