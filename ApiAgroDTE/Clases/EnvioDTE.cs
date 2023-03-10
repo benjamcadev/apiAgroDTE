@@ -413,6 +413,8 @@ namespace ApiAgroDTE.Clases
 
 
 
+
+
                 //CHEQUEAR SI LA RESPUESTA ES UN JSON, SI ES ASI
                 //LA KEY "estado" == "REC"
 

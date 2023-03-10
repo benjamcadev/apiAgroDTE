@@ -1408,6 +1408,24 @@ namespace ApiAgroDTE.Controllers
                                                 respuestaEnvio = envio.enviarSobreBoleta(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
                                                 TrackId_str = respuestaEnvio;
 
+                                                if (TrackId_str == "TRKID ERROR")
+                                                {
+                                                    for (int i = 0; i < 2; i++)
+                                                    {
+                                                        respuestaEnvio = envio.enviarSobreBoleta(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
+                                                        TrackId_str = respuestaEnvio;
+
+                                                        if (TrackId_str != "TRKID ERROR")
+                                                        {
+                                                            break;
+                                                        }
+                                                        
+                                                    }
+
+                                                }
+
+                                                //SI SIGUE CON ERROR TRKID ERROR USAR EL gotto: para saltar al if sin conexion
+
 
 
                                             }
@@ -1439,9 +1457,9 @@ namespace ApiAgroDTE.Controllers
 
                                                 }
 
+                                                //SI SIGUE CON ERROR HEFESTO.DTE.AUTENTICACION.ENT.Respuesta ERROR USAR EL gotto: para saltar al if sin conexion
 
 
-                                                
                                             }
 
 
