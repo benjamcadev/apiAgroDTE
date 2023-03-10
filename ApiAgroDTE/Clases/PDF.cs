@@ -254,7 +254,19 @@ namespace ApiAgroDTE.Clases
                         foreach (XmlNode dte in DTEList)
                         {
 
-                            string dte_str = dte.ChildNodes[0].OuterXml;
+                        //AVECES SE PRESENTA EL CASO QUE EL XML VIENE CON UN COMENTARIO DENTRO DE LA ETIQUETA <DTE>
+                        string dte_str = "";
+                        if (dte.ChildNodes[0].OuterXml.Contains("<!--"))
+                        {
+                            dte_str = dte.ChildNodes[1].OuterXml;
+                        }
+                        else
+                        {
+                            dte_str = dte.ChildNodes[0].OuterXml;
+                        }
+                       
+
+                        
                             XmlDocument documentoXML_DTE = new XmlDocument();
                             documentoXML_DTE.LoadXml(dte_str);
                             XmlNodeList Folio_list = documentoXML_DTE.GetElementsByTagName("Folio");
