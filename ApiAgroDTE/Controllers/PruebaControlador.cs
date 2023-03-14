@@ -1381,6 +1381,8 @@ namespace ApiAgroDTE.Controllers
                                         // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
                                         //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
+                                        bool responseErrorSII = false;
+
                                         if (respuestaPing.Contains("Error"))
                                         {
                                             for (int i = 0; i < 3; i++)
@@ -1396,6 +1398,12 @@ namespace ApiAgroDTE.Controllers
                                            
                                         }
 
+                                        salto2:
+                                        if (responseErrorSII)
+                                        {
+                                            respuestaPing = "Hubo Error en ping";
+                                        }
+                                        
                                         //if (respuestaPing == respuestaConexion)
                                         if (respuestaPing == "Conexion Exitosa")
                                         {
@@ -1407,6 +1415,8 @@ namespace ApiAgroDTE.Controllers
                                             {
                                                 respuestaEnvio = envio.enviarSobreBoleta(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
                                                 TrackId_str = respuestaEnvio;
+
+                                                TrackId_str = "TRKID ERROR";
 
                                                 if (TrackId_str == "TRKID ERROR")
                                                 {
@@ -1426,11 +1436,12 @@ namespace ApiAgroDTE.Controllers
 
                                                 //SI SIGUE CON ERROR TRKID ERROR USAR EL gotto: para saltar al if sin conexion
 
-
+                                                goto salto;
 
                                             }
                                             else
                                             {
+                                               
                                                 respuestaEnvio = envio.enviarSobre(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
                                                 //string respuestaEnvio es el TRACKID EN XML
                                                 XmlDocument xmlDoc2 = new XmlDocument();
@@ -1459,11 +1470,16 @@ namespace ApiAgroDTE.Controllers
 
                                                 //SI SIGUE CON ERROR HEFESTO.DTE.AUTENTICACION.ENT.Respuesta ERROR USAR EL gotto: para saltar al if sin conexion
 
-
+                                                goto salto;
                                             }
 
 
-
+                                        salto:
+                                            if (TrackId_str == "TRKID ERROR" || TrackId_str == "0" || TrackId_str == "HEFESTO.DTE.AUTENTICACION.ENT.Respuesta")
+                                            {
+                                                responseErrorSII = true;
+                                                goto salto2;
+                                            }
 
 
 
@@ -1624,7 +1640,7 @@ namespace ApiAgroDTE.Controllers
                                         else
                                         {
                                             //NO EXISTE CONEXION, GENERAR SOLAMENTE PDF  Y REGISTRAR SIN TRACK ID EN LA TABLA SOBRE
-
+                                           
                                             //TRAEMOS LA ID DEL SOBRE EN LA BD
                                             string queryIdSobre = "SELECT id_envio_dte FROM envio_dte WHERE rutaxml_envio_dte = '" + respuestaCrearDTE[1] + "'";
                                             queryIdSobre = queryIdSobre.Replace("\\", "\\\\");

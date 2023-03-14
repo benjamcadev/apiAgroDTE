@@ -384,8 +384,8 @@ namespace ApiAgroDTE.Clases
 
                 //METODO RESTSHARP----------------------------------------------------
                 //SETEAMOS PARAMETROS DEL CLIENTE
-                var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");// PRODUCCION
-                //var client = new RestClient("https://pangal.sii.cl/recursos/v1/boleta.electronica.envio");// CERTIFICACION
+               var client = new RestClient("https://rahue.sii.cl/recursos/v1/boleta.electronica.envio");// PRODUCCION
+               //var client = new RestClient("https://pangal.sii.cl/recursos/v1/boleta.electronica.envio");// CERTIFICACION
                 client.UserAgent = "Mozilla/4.0 ( compatible; PROG 1.0; Windows NT)";
 
                 //SETEAMOS PARAMETROS DE LA REQUEST
