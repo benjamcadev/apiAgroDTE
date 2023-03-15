@@ -26,14 +26,37 @@ namespace ApiAgroDTE.Clases
             EnvioDTE envioDTE = new EnvioDTE();         
             Schemas schemas = new Schemas();
             ConexionBD conexion = new ConexionBD();
+            string[] respuestaCrearDTE = new string[7];
+
+            if (!dte.TryGetProperty("Encabezado", out var dte_content))
+            {
+                respuestaCrearDTE[0] = "Error, en json de request no viene key Encabezado";
+                return respuestaCrearDTE;
+            }
 
             JsonElement Encabezado = dte.GetProperty("Encabezado");
+
+            if (!dte.TryGetProperty("Detalle", out var dte_content2))
+            {
+                respuestaCrearDTE[0] = "Error, en json de request no viene key Detalle";
+                return respuestaCrearDTE;
+            }
             JsonElement Detalles = dte.GetProperty("Detalle");
+
+           
+            if (Detalles.GetArrayLength() <= 0)
+            {
+                //EN EL DETALLES NO VIENEN DATOS
+                respuestaCrearDTE[0] = "Error, en json de request no vienen datos en el key Detalle";
+                return respuestaCrearDTE;
+            }
+            
+
             JsonElement DscRcgGlobalOp = new JsonElement(); //Opcional
             JsonElement ReferenciaOp = new JsonElement();//Opcional
             Boolean RefFlag = false; //BANDERIN PARA REFERENCIA YA QUE ES JSON Y NO PODEMOS VERIFICAR CORRECTAMENTE LOS DATOS VACIOS
             Boolean DscRcgFlag = false;
-            string[] respuestaCrearDTE = new string[7];
+            
 
             //SI REFERENCIA TRAE DATOS, EL BANDERIN CAMBIA A TRUE PARA CREAR REFERENCIA EN FACTURA
             if (dte.TryGetProperty("Referencia", out var Referencia))

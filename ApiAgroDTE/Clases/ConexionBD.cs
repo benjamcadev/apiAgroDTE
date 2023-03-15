@@ -19,7 +19,7 @@ namespace ApiAgroDTE.Clases
         static string password = "agro1113$"; 
         static string port ="3306";*/
 
-        static string servidor = "192.168.1.9";
+       static string servidor = "192.168.1.9";
         static string bd = "dte_agroplastic";
         static string usuario = "root";
         static string password = "agrodte1113";
