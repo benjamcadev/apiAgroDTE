@@ -158,6 +158,7 @@ namespace ApiAgroDTE.Clases
 
         public string CrearPDFCompra(string path,string folio_compra)
         {
+           
             try
             {
                 string observaciones = "";
@@ -167,9 +168,7 @@ namespace ApiAgroDTE.Clases
                 XmlDocument documentoXml = new XmlDocument();
                 //string path = "C:\\Users\\Marcelo Riquelme\\source\\repos\\ConsoleApp1\\DTE 34 - Empresa 76795561 - Folio Nº 101882.xml";
 
-                documentoXml.Load(path);
-
-               
+                documentoXml.Load(path);     
 
                
 
@@ -182,9 +181,6 @@ namespace ApiAgroDTE.Clases
                 string fileNamePdf = fileNameXml.Replace(".xml", ".pdf");
                 // Indicamos donde vamos a guardar el documento
 
-
-
-
                 string respuesta_directorio = crearDirectorio();
 
 
@@ -194,12 +190,6 @@ namespace ApiAgroDTE.Clases
                 PdfWriter writer;
 
                 writer = PdfWriter.GetInstance(documentoPDF, new FileStream(directorio_pdf, FileMode.Create));
-
-
-
-
-
-
 
 
                 // Le colocamos el título y el autor
@@ -307,8 +297,9 @@ namespace ApiAgroDTE.Clases
         static public void GenerarDocumento(Document documentoPDF, XmlDocument documentoXml, string observaciones, PdfWriter writer, int pagina)
         {
             //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-------------------INICIO----------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-             ConexionBD conexion = new ConexionBD();       
+             ConexionBD conexion = new ConexionBD();
 
+            string quieroVerLaWea = "";
             //COLORES BASE NUEVOS
             var FontColourAzul1 = new BaseColor(32, 67, 138);
             var FontColourAzul2 = new BaseColor(93, 127, 175);
@@ -892,8 +883,16 @@ namespace ApiAgroDTE.Clases
                 CultureInfo cultureUS = new CultureInfo("en-US");
                 if (PrcItem.Count != 0)
                 {
-                    //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N                   
-                    precioItem = decimal.Parse(PrcItem[i].InnerXml, cultureUS).ToString("N");
+                    //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N 
+                    string precioItemTemp = PrcItem[i].InnerXml;
+                    precioItemTemp = precioItemTemp.Replace('.',',');
+
+                    quieroVerLaWea = precioItemTemp;
+
+                    break;
+
+
+                    precioItem = decimal.Parse(precioItemTemp, cultureUS).ToString("N");
 
                     double numEnero = double.Parse(precioItem.Split(',')[0]);
                     double numDecimal = double.Parse(precioItem.Split(',')[1]);

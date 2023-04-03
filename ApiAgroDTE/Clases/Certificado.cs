@@ -12,7 +12,8 @@ namespace ApiAgroDTE.Clases
 
         public string firmarConCertificado(string T33F, XmlDocument oDocument,string DirectorioDTE){
 
-    
+        ConexionBD conexion = new ConexionBD();
+
         string nombrecertificado = "RUBEN SALATIEL RIVERA GALLEGUILLOS";
         string xmlparafirmar = oDocument.OuterXml;
 

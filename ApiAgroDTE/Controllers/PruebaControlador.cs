@@ -34,19 +34,11 @@ namespace ApiAgroDTE.Controllers
        */
 
 
-        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
        
-
-        [HttpGet("api/PruebaMetodo/edad/{id}-{id2}")]
-        public string GetDevolverEdad(int id, int id2)
-        {
-           
-            return "los datos recbibidos son"+id+" - "+id2;
-        }
-
         [HttpGet("api/dte/taxpayer/{rut}")]
         public ContentResult datosCliente(string rut)
         {
@@ -216,7 +208,7 @@ namespace ApiAgroDTE.Controllers
             return respuesta;
         }
 
-            [HttpPost("api/dte/cargarXML")]
+        [HttpPost("api/dte/cargarXML")]
         public ContentResult cargarXML([FromBody] JsonElement values)
         {
             /*{
@@ -912,6 +904,23 @@ namespace ApiAgroDTE.Controllers
                 respuestaEnvio = envio.enviarSobreBoleta(path_archivo, rutEmisor, rutEmpresa);
                 TrackId_str = respuestaEnvio;
 
+                //SE CONTROLA ERROR DE ENVIO BOLETAS HACE UN INTENTO DE 2 VECES
+                if (TrackId_str == "TRKID ERROR")
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        respuestaEnvio = envio.enviarSobreBoleta(path_archivo, rutEmisor, rutEmpresa);
+                        TrackId_str = respuestaEnvio;
+
+                        if (TrackId_str != "TRKID ERROR")
+                        {
+                            break;
+                        }
+
+                    }
+
+                }
+
                 if (ulong.TryParse(TrackId_str, out ulong numeroEnvio))
                 {
                     ConexionBD conexion = new ConexionBD();
@@ -1375,12 +1384,29 @@ namespace ApiAgroDTE.Controllers
                                     //DEPENDIENDO LA RESPUESTA DEL SCHEMA EJECUTA IF
                                     if (respuestaCrearDTE[0] == "XML Valido" && respuestaCrearDTE[4] == "XML Valido")
                                     {
-                                        //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                        string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
-                                        //string respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
-                                        // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
-                                        //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
 
+                                        //TRAEMOS EL ESTADO DESDE LA BASE DE DATOS PARA QUE LA API SEPA SI TIENE QUE PREGUNTAR POR CONEXION A INTERNET O NO
+                                        List<string> datosConexion = conexion.Select("SELECT estado_conexion_empresa FROM empresa");
+
+                                        string respuestaPing = "";
+
+                                        if (datosConexion[0] == "Sin Conexion")
+                                        {
+                                            //SETEADO EN LA BD QUE NO HAY CONEXION, PASA DIRECTO A REALIZAR EL DTE SIN ENVIAR
+                                            respuestaPing = "Sin Conexion";
+                                        }
+                                        else if(datosConexion[0] == "Con Conexion")
+                                        {
+
+                                            //CHEQUEAR SI HAY CONEXION A INTERNET 
+                                            //string respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
+                                            respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
+                                            // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
+                                            //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
+                                        }
+
+
+                                        //ESTA VARIABLE ES EN CASO QUE HAYA REITENTADO MUCHAS VECES ENVIAR EL SOBRE, TIENE UN GOTO MAS ABAJO EL CUAL VA MAS ABAJO
                                         bool responseErrorSII = false;
 
                                         if (respuestaPing.Contains("Error"))
@@ -1416,7 +1442,7 @@ namespace ApiAgroDTE.Controllers
                                                 respuestaEnvio = envio.enviarSobreBoleta(respuestaCrearDTE[1], rutEmisor, rutEmpresa);
                                                 TrackId_str = respuestaEnvio;
 
-                                                TrackId_str = "TRKID ERROR";
+                                                
 
                                                 if (TrackId_str == "TRKID ERROR")
                                                 {
