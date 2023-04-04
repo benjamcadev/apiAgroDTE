@@ -884,15 +884,24 @@ namespace ApiAgroDTE.Clases
                 if (PrcItem.Count != 0)
                 {
                     //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N 
-                    string precioItemTemp = PrcItem[i].InnerXml;
+                   /* string precioItemTemp = PrcItem[i].InnerXml.ToString();
                     precioItemTemp = precioItemTemp.Replace('.',',');
+                    double precioItemDoubleTemp = double.Parse(precioItemTemp);*/
 
-                    quieroVerLaWea = precioItemTemp;
+                   /* using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\variable_precioItemTemp.txt"))
+                    {
+                        writetext.WriteLine(precioItem);
+                    }*/
 
-                    break;
 
 
-                    precioItem = decimal.Parse(precioItemTemp, cultureUS).ToString("N");
+                    precioItem = decimal.Parse(PrcItem[i].InnerXml, cultureUS).ToString("N");
+
+
+                   /* using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\variable_precioItem.txt"))
+                    {
+                        writetext.WriteLine(precioItem);
+                    }*/
 
                     double numEnero = double.Parse(precioItem.Split(',')[0]);
                     double numDecimal = double.Parse(precioItem.Split(',')[1]);

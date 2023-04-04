@@ -397,7 +397,7 @@ namespace ApiAgroDTE.Clases
                 request.AlwaysMultipartFormData = true;
                 request.AddHeader("Content-Type", "multipart/form-data");
                 request.AddHeader("Host", "rahue.sii.cl"); //PRODUCCION
-                //request.AddHeader("Host", "pangal.sii.cl"); //CERTIFICACION
+               //request.AddHeader("Host", "pangal.sii.cl"); //CERTIFICACION
                 
                 //AGREGAMOS LOS PARAMETROS
                 request.AddParameter("rutSender", pRutEmisor);

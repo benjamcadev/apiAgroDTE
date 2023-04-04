@@ -361,7 +361,7 @@ namespace ApiAgroDTE.Clases
 
             if(MntNetoApi == Math.Round(MntNetoLocal) || MntNetoApi == Math.Round(MntNetoLocal)+1 || MntNetoApi == Math.Round(MntNetoLocal-1) ){               
             }else{ 
-                if (TipoDTE == "41")
+                if (TipoDTE == "41"  || TipoDTE == "39")
                 {
                     return "ta bien";
                 }
@@ -370,7 +370,7 @@ namespace ApiAgroDTE.Clases
 
             if(Math.Round(IVALocal) == IVAApi || Math.Round(IVALocal) == IVAApi+1 || Math.Round(IVALocal) == IVAApi-1){               
             }else{ 
-                if(TipoDTE == "34" || TipoDTE == "41")
+                if(TipoDTE == "34" || TipoDTE == "41" || TipoDTE == "39")
                 {
                     return "ta bien";
                 }
@@ -379,7 +379,13 @@ namespace ApiAgroDTE.Clases
 
             if(MntTotalApi == Math.Round(MntTotalLocal) || MntTotalApi == Math.Round(MntTotalLocal)+1 || MntTotalApi == Math.Round(MntTotalLocal)-1){
                
-            }else{ return "Error en MntTotal: "+MntTotalApi.ToString()+"/"+ Math.Round(MntTotalLocal).ToString();}
+            }else{
+                if (TipoDTE == "39")
+                {
+                    return "ta bien";
+                }
+                return "Error en MntTotal: "+MntTotalApi.ToString()+"/"+ Math.Round(MntTotalLocal).ToString();
+            }
 
             return "ta bien";
 
