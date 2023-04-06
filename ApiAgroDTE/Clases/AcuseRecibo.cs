@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
@@ -469,10 +470,10 @@ namespace ApiAgroDTE.Clases
                 //strCorreoDestino = "mriquelme@agroplastic.cl";
                 mensajeCorreo = mensaje;
 
-            }           
+            }
 
             //strCorreoDestino = "mriquelme@agroplastic.cl"; // comentar para produccion     
-
+            SmtpClient mySmtpClient = new SmtpClient("mail.agroplastic.cl");
             try
             {
                 //TRAER EL CORREO Y PASS DESDE LA BD
@@ -481,10 +482,11 @@ namespace ApiAgroDTE.Clases
                 List<string> respuesta_correo = new List<string>();
                 respuesta_correo = conexion.Select("SELECT mail_intercambio_empresa,pass_intercambio_empresa FROM empresa WHERE id_empresa = 1");
 
-                SmtpClient mySmtpClient = new SmtpClient("mail.agroplastic.cl");
+               
 
                 // set smtp-client with basicAuthentication
                 mySmtpClient.UseDefaultCredentials = false;
+                mySmtpClient.EnableSsl = true;
                 System.Net.NetworkCredential basicAuthenticationInfo = new System.Net.NetworkCredential(respuesta_correo[0], respuesta_correo[1]);
                 mySmtpClient.Credentials = basicAuthenticationInfo;
 
@@ -493,7 +495,8 @@ namespace ApiAgroDTE.Clases
                 //MailAddress to = new MailAddress("bmcortes@agroplastic.cl, mriquelme@agroplastic.cl", "Benjamin");
                 MailMessage myMail = new MailMessage();
                 myMail.To.Add(strCorreoDestino);
-                //myMail.To.Add("mriquelme@agroplastic.cl");
+                //myMail.To.Add("bmcortes@agroplastic.cl");
+               
                 myMail.From = from;
 
                 if(mensaje == "" || mensaje == "XML Cliente"){
@@ -517,16 +520,19 @@ namespace ApiAgroDTE.Clases
                 myMail.IsBodyHtml = true;
 
                 mySmtpClient.Send(myMail);
+
+                Thread.Sleep(5000); //AGREGAMOS ESTO PARA QUE MANDE LOS CORREOS DE A POCO.
+                mySmtpClient.Dispose();
             }
 
             catch (SmtpException ex)
             {
-               
+                mySmtpClient.Dispose();
                 return "SmtpException has occured: " + ex.Message;
             }
             catch (Exception ex)
             {
-
+                mySmtpClient.Dispose();
                 return ex.Message;
             }
 
