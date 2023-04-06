@@ -521,7 +521,7 @@ namespace ApiAgroDTE.Clases
 
                 mySmtpClient.Send(myMail);
 
-                Thread.Sleep(5000); //AGREGAMOS ESTO PARA QUE MANDE LOS CORREOS DE A POCO.
+         
                 mySmtpClient.Dispose();
             }
 
