@@ -471,6 +471,15 @@ namespace ApiAgroDTE.Clases
                 mensajeCorreo = mensaje;
 
             }
+            //ABRIMOS EL XML PARA PODER SACAR DATOS DESDE EL ARCHICO OCMO EL FOLIO Y PODER REGISTRARLO EN EL LOG
+            XmlDocument xml_sobre = new XmlDocument();
+            xml_sobre.PreserveWhitespace = true;
+            xml_sobre.Load(EnvioAcuseDTE_xml);
+            XmlNodeList Foliolist = xml_sobre.GetElementsByTagName("Folio");
+            var nodoFolio = Foliolist.Item(0).ChildNodes;
+            string folio = nodoFolio.Item(0).OuterXml;
+
+            ConexionBD conexion = new ConexionBD();
 
             //strCorreoDestino = "mriquelme@agroplastic.cl"; // comentar para produccion     
             SmtpClient mySmtpClient = new SmtpClient("mail.agroplastic.cl");
@@ -478,7 +487,7 @@ namespace ApiAgroDTE.Clases
             {
                 //TRAER EL CORREO Y PASS DESDE LA BD
 
-                ConexionBD conexion = new ConexionBD();
+              
                 List<string> respuesta_correo = new List<string>();
                 respuesta_correo = conexion.Select("SELECT mail_intercambio_empresa,pass_intercambio_empresa FROM empresa WHERE id_empresa = 1");
 
@@ -523,11 +532,19 @@ namespace ApiAgroDTE.Clases
 
          
                 mySmtpClient.Dispose();
+
+                //REGISTAR EN EL LOG EL ENVIO DEL CORREO AL CLIENTE
+               
+
+                string log_envio_sobre_cliente = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Envio XML a cliente rut: "+ rutDestino + " correo: "+ strCorreoDestino + " archivo XML: "+ EnvioAcuseDTE_xml + " Folio: "+folio+"',NOW(),'Envio XML cliente','')";
+                conexion.Consulta(log_envio_sobre_cliente);
             }
 
             catch (SmtpException ex)
             {
                 mySmtpClient.Dispose();
+                string log_envio_sobre_cliente = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('ERROR Envio XML a cliente MOTIVO ERROR: "+ ex.Message + " rut: " + rutDestino + " correo: " + strCorreoDestino + " archivo XML: " + EnvioAcuseDTE_xml + " Folio: " + folio + "',NOW(),'ERROR Envio XML cliente','')";
+                conexion.Consulta(log_envio_sobre_cliente);
                 return "SmtpException has occured: " + ex.Message;
             }
             catch (Exception ex)

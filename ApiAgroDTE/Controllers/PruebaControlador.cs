@@ -214,27 +214,44 @@ namespace ApiAgroDTE.Controllers
             //CREAR RESPUESTA
             ContentResult respuesta = new ContentResult();
 
-            //SACAMOS LOS DATOS DESDE EL JSON
-            string base64Caf = values.GetProperty("base64Caf").ToString();
-            string nameFileCaf = values.GetProperty("nameFileCaf").ToString();
+            try
+            {
+                //SACAMOS LOS DATOS DESDE EL JSON
+                string base64Caf = values.GetProperty("base64Caf").ToString();
+                string nameFileCaf = values.GetProperty("nameFileCaf").ToString();
 
-            string[] base64ListSplit =  base64Caf.Split("base64,");
+                string[] base64ListSplit = base64Caf.Split("base64,");
 
-            Byte[] bytes = Convert.FromBase64String(base64ListSplit[1]);
+                Byte[] bytes = Convert.FromBase64String(base64ListSplit[1]);
 
-            XmlDocument xml_file = new XmlDocument();
-            string xml = Encoding.UTF8.GetString(bytes);
-            xml_file.LoadXml(xml);
-            xml_file.PreserveWhitespace = true;
-            string pathXML_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\CAF_PRUEBA\"+ nameFileCaf;
-            xml_file.Save(pathXML_Temp);
+                XmlDocument xml_file = new XmlDocument();
+                string xml = Encoding.UTF8.GetString(bytes);
+                xml_file.LoadXml(xml);
+                xml_file.PreserveWhitespace = true;
+                string pathXML_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\CAF_PRUEBA\" + nameFileCaf;
+                xml_file.Save(pathXML_Temp);
 
-            string JsonResponse = @"{""respuesta"": ""ok""}";
+                string JsonResponse = @"{""respuesta"": ""ok""}";
 
-            respuesta.Content = JsonResponse;
-            respuesta.ContentType = "application/json";
-            respuesta.StatusCode = 200;
-            return respuesta;
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application/json";
+                respuesta.StatusCode = 200;
+                return respuesta;
+            }
+            catch (Exception e)
+            {
+                string JsonResponse = @"{""respuesta"": """+e.Message+@"""}";
+
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application/json";
+                respuesta.StatusCode = 200;
+                return respuesta;
+               
+            }
+
+          
+
+            
         }
 
             [HttpPost("api/dte/cargarXML")]
