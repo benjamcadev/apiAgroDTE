@@ -207,31 +207,101 @@ namespace ApiAgroDTE.Controllers
 
             return respuesta;
         }
+        [HttpPost("api/dte/document/estadosobre")]
+        public ContentResult estadoSobre([FromBody] JsonElement values)
+        {
+            //FUNCION PARA CONSULTAR EL ESTADO DEL SOBRE/DTE EN EL SII
 
-        [HttpPost("api/dte/cargarCaf")]
-        public ContentResult cargarCaf([FromBody] JsonElement values)
+            /*Ejemplo:
+            {
+                "trackid": "8258517833",
+                "servidor": "api"
+            }*/
+
+            //CREAR RESPUESTA
+            ContentResult respuesta = new ContentResult();
+            EnvioDTE enviodte = new EnvioDTE();
+
+            //SACAMOS LOS DATOS DESDE EL JSON
+            string track_id = ""; string servidor = ""; string JsonResponse = "";
+            try
+            {
+                track_id = values.GetProperty("trackid").ToString();
+                servidor = values.GetProperty("servidor").ToString();
+            }
+            catch (Exception w)
+            {
+                JsonResponse = @"{""respuesta"": """ + w.Message + @"""}";
+                respuesta.Content = JsonResponse;
+                respuesta.ContentType = "application/json";
+                respuesta.StatusCode = 200;
+                return respuesta;
+
+            }
+     
+            string respuesta_estado = enviodte.updateEstadoSobre(track_id,servidor);
+
+            JsonResponse = @"{""respuesta"": """+ respuesta_estado + @"""}";
+
+           /* RESPUESTA DE EXITO
+            * {
+                "respuesta": "Aceptado: Sobre de envio trackID: 8377910982"
+            }*/
+
+            respuesta.Content = JsonResponse;
+            respuesta.ContentType = "application/json";
+            respuesta.StatusCode = 200;
+            return respuesta;
+
+
+        }
+
+            [HttpPost("api/dte/cargarArchivo")]
+        public ContentResult cargarArchivo([FromBody] JsonElement values)
         {
             //CREAR RESPUESTA
             ContentResult respuesta = new ContentResult();
 
             try
             {
-                //SACAMOS LOS DATOS DESDE EL JSON
-                string base64Caf = values.GetProperty("base64Caf").ToString();
-                string nameFileCaf = values.GetProperty("nameFileCaf").ToString();
 
-                string[] base64ListSplit = base64Caf.Split("base64,");
+                string JsonResponse = "";
+
+                //SACAMOS LOS DATOS DESDE EL JSON
+                string base64Archivo = values.GetProperty("base64Archivo").ToString();
+                string nameFileArchivo = values.GetProperty("nameFileArchivo").ToString();
+                string pathArchivo_Temp = "";
+
+                if (nameFileArchivo.Contains("xml"))
+                {
+                  pathArchivo_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\CAF_PRUEBA\" + nameFileArchivo;
+                }
+                if (nameFileArchivo.Contains("pfx"))
+                {
+                  pathArchivo_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Certificado\" + nameFileArchivo;
+                }
+                else
+                {
+                    JsonResponse = @"{""respuesta"": ""error: No es un archivo valido""}";
+                }
+
+                string[] base64ListSplit = base64Archivo.Split("base64,");
 
                 Byte[] bytes = Convert.FromBase64String(base64ListSplit[1]);
 
-                XmlDocument xml_file = new XmlDocument();
+                
+               
+
+               /* XmlDocument xml_file = new XmlDocument();
                 string xml = Encoding.UTF8.GetString(bytes);
                 xml_file.LoadXml(xml);
                 xml_file.PreserveWhitespace = true;
-                string pathXML_Temp = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\CAF_PRUEBA\" + nameFileCaf;
-                xml_file.Save(pathXML_Temp);
+               
+                xml_file.Save(pathArchivo_Temp);*/
 
-                string JsonResponse = @"{""respuesta"": ""ok""}";
+                System.IO.File.WriteAllBytes(pathArchivo_Temp, bytes);
+
+                JsonResponse = @"{""respuesta"": ""ok""}";
 
                 respuesta.Content = JsonResponse;
                 respuesta.ContentType = "application/json";
@@ -240,7 +310,7 @@ namespace ApiAgroDTE.Controllers
             }
             catch (Exception e)
             {
-                string JsonResponse = @"{""respuesta"": """+e.Message+@"""}";
+                string JsonResponse = @"{""respuesta"": ""error: "+e.Message+@"""}";
 
                 respuesta.Content = JsonResponse;
                 respuesta.ContentType = "application/json";

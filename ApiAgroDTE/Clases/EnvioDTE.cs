@@ -336,9 +336,9 @@ namespace ApiAgroDTE.Clases
         public string enviarSobre(string archivo, string rutEmisor, string rutEmpresa)
         {
             
-            //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo=" + archivo + "&rutEmisor=" + rutEmisor + "&rutEmpresa=" + rutEmpresa);
+            WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo=" + archivo + "&rutEmisor=" + rutEmisor + "&rutEmpresa=" + rutEmpresa);
             //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE_Maullin/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
-            WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
+            //WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/enviarSobreSII?archivo="+ archivo + "&rutEmisor="+ rutEmisor + "&rutEmpresa="+ rutEmpresa);
             request.Method = "GET";
             WebResponse response = request.GetResponse();
             string respuestaEnvio = "";
@@ -646,9 +646,9 @@ namespace ApiAgroDTE.Clases
         public string consultarEstadoEnvio(string trackID)
         {
 
-            //WebRequest request = WebRequest.Create("https://localhost:44327/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
-            //WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
-            WebRequest request = WebRequest.Create("http://localhost:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID);
+           // WebRequest request = WebRequest.Create("http://localhost:81/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID); //CERTIFICACION
+            //WebRequest request = WebRequest.Create("http://localhost:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID); 
+            WebRequest request = WebRequest.Create("http://192.168.1.9:90/WebServiceEnvioDTE/EnvioSobreDTE.asmx/consultarEstadoEnvio?Numero_Envio=" + trackID); //PRODUCCION
             request.Method = "GET";
             WebResponse response = request.GetResponse();
             string respuestaEnvio = "";
@@ -668,7 +668,271 @@ namespace ApiAgroDTE.Clases
             return respuestaEnvio;
         }
 
-     
+        public  string updateEstadoSobre(string TrackId_str, string servidor)
+        {
+            if (TrackId_str != "")
+            {
+
+
+                try
+                {
+                    string datetime_str = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+
+                    ConexionBD conexion = new ConexionBD();
+                    //CONSULTAR ESTADO DE ENVIO
+
+                    string resultadoEnvio = "";
+                    string estado_str = "";
+                    string detalle_str = "";
+                    XmlDocument xmlDoc = new XmlDocument();
+                    dynamic respuesta_envio_estado_json;
+
+                    if (servidor == "api" || servidor == "apicert")
+                    {
+                        //OBTENER TOKEN PARA CONSULTAR ESTADO DE ENVIO
+                        string token = "";
+
+                        //VERIFICAR SI EXISTE UN TOKEN ACTIVO EN LA BASE DE DATOS
+                        List<string> respuesta_token_activo = conexion.Select("SELECT digitos_token FROM token WHERE estado_token = 1 AND servidor_token = '" + servidor + "'");
+                        if (respuesta_token_activo.Count == 0)
+                        {
+                            //NO EXISTE TOKEN ACTIVO DE BOLETAS
+                             return "NO EXISTE TOKEN ACTIVO DE BOLETAS";
+                        }
+                        else
+                        {
+                            //EXISTE TOKEN VALIDO DE BOLETAS
+                            token = respuesta_token_activo[0];
+                            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            string host_servidor = "";
+                                host_servidor = "https://api.sii.cl/recursos/v1/boleta.electronica.envio/76958430-7-";
+
+                                //host_servidor = "https://apicert.sii.cl/recursos/v1/boleta.electronica.envio/76958430-7-"; //CERTIFICACION
+                            
+                            var client = new RestClient(host_servidor + TrackId_str);
+                            client.Timeout = -1;
+                            var request = new RestRequest(Method.GET);
+                            request.AddCookie("Cookie", "TOKEN=" + token);
+                            request.AlwaysMultipartFormData = true;
+                            IRestResponse response = client.Execute(request);
+
+                            resultadoEnvio = response.Content;
+
+                            if ((resultadoEnvio.StartsWith("{") && resultadoEnvio.EndsWith("}")) || (resultadoEnvio.StartsWith("[") && resultadoEnvio.EndsWith("]")))
+                            {
+                                //ES UN JSON
+                                try
+                                {
+                                    respuesta_envio_estado_json = JsonConvert.DeserializeObject(resultadoEnvio);
+                                    estado_str = respuesta_envio_estado_json["estado"];
+
+                                    //RESCATAR EL CAMPO "detalle_rep_rech" Y GUARDARLO EN LA BD EN UNA COLUMNA NUEVA
+                                    detalle_str = resultadoEnvio;
+
+
+
+                                }
+                                catch (Exception ex)
+                                {
+                                   return "Hubo un error, respuesta del servidor del SII:" + resultadoEnvio;
+
+                                }
+
+                            }
+                            else
+                            {
+                                return "Hubo un error, respuesta del servidor del SII:" + resultadoEnvio;
+                            }
+
+
+                        }
+
+                    }
+
+                    if (servidor == "maullin" || servidor == "palena")
+                    {
+                        resultadoEnvio = consultarEstadoEnvio(TrackId_str);
+                        //string resultadoEnvio es la respuesta en XML
+
+
+                        xmlDoc.LoadXml(resultadoEnvio);
+                        XmlNodeList estado = xmlDoc.GetElementsByTagName("ESTADO");
+                        XmlNodeList respuesta_completa = xmlDoc.GetElementsByTagName("SII:RESPUESTA");
+
+
+
+                        if (estado.Count == 0)
+                        {
+                            return "Hubo un error, respuesta del servidor del SII:" + resultadoEnvio;
+                        }
+                        else
+                        {
+                            try
+                            {
+                                estado_str = estado[0].InnerXml;
+                                detalle_str = respuesta_completa[0].InnerXml;
+
+                            }
+                            catch (Exception e)
+                            {
+                              return "Hubo un error, respuesta del servidor del SII:" + resultadoEnvio;
+                            }
+                        }
+                    }
+
+
+                    //RESPUESTA DEFAULT
+                    if (estado_str != "EPR")
+                    {
+                        string respuesta = "Hubo un error, respuesta del servidor del SII: " + resultadoEnvio + " Track ID : " + TrackId_str;
+                        string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado',  revision_envio_dte = '0', detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                        conexion.Consulta(queryUpdateEstado);
+                        return respuesta;
+
+                    }
+
+
+
+                    if (estado_str == "-11")
+                    {
+                        //MANDAR MENSAJE ERROR DE REINTENTOS DE FOLIO REPETIDO
+                        string respuesta = "Error: Sobre de envio trackID: " + TrackId_str + ", aun no procesado o con error en SII";
+                        conexion.Consulta("INSERT INTO log_event (id_log_event, mensaje_log_event, fecha_log_event, referencia_log_event, query_request_log_event) VALUES (NULL, '" + respuesta + "', NOW(), 'TrackID: " + TrackId_str + " Aplicacion de Servicio ASConsultaEstadoEnvio', '') ");
+                        //mandarEmailSobre(TrackId_str, "Error", detalle_str);
+
+                        string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado',  revision_envio_dte = '0', detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                        conexion.Consulta(queryUpdateEstado);
+
+                        return respuesta;
+
+                    }
+
+
+                    string informados_str = "";
+                    string aceptados_str = "";
+                    string rechazados_str = "";
+                    string reparos_str = "";
+                    string consumo_folio_str = "";
+
+                    if (estado_str == "RCT")
+                    {
+                        //UPDATE EL SOBRE RECHAZADO CON EL ESTADO "RECHAZADO"
+                        string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado', rechazos_envio_dte = '1', informados_envio_dte = '1', revision_envio_dte = '1', detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                        conexion.Consulta(queryUpdateEstado);
+                    }
+
+                    if (estado_str == "EPR")
+                    {
+                        //ENVIO PROCESADO
+                        if (servidor == "api" || servidor == "apicert")
+                        {
+                            respuesta_envio_estado_json = JsonConvert.DeserializeObject(resultadoEnvio);
+                            var estadisticas_array = JsonConvert.DeserializeObject(respuesta_envio_estado_json["estadistica"].ToString());
+                            string estadisticas_str_json = estadisticas_array[0].ToString();
+                            dynamic estadisticas_json = JsonConvert.DeserializeObject(estadisticas_str_json);
+
+                            informados_str = estadisticas_json["informados"].ToString();
+                            aceptados_str = estadisticas_json["aceptados"].ToString();
+                            rechazados_str = estadisticas_json["rechazados"].ToString();
+                            reparos_str = estadisticas_json["reparos"].ToString();
+
+                        }
+
+                        if (servidor == "maullin" || servidor == "palena")
+                        {
+                            //RESCATAMOS LOS VALORES DE LA RESPUESTA EN XML
+
+                            XmlNodeList informados = xmlDoc.GetElementsByTagName("INFORMADOS");
+                            XmlNodeList aceptados = xmlDoc.GetElementsByTagName("ACEPTADOS");
+                            XmlNodeList rechazados = xmlDoc.GetElementsByTagName("RECHAZADOS");
+                            XmlNodeList reparos = xmlDoc.GetElementsByTagName("REPAROS");
+
+                            if (informados.Count == 0 && aceptados.Count == 0 && rechazados.Count == 0 && reparos.Count == 0)
+                            {
+                                //QUIERE DECIR QUE ES UNA RESPUESTA DE CONSUMO FOLIOS
+                                consumo_folio_str = "1";
+                                informados_str = "0";
+                                aceptados_str = "0";
+                                rechazados_str = "0";
+                                reparos_str = "0";
+                            }
+                            else
+                            {
+                                informados_str = informados[0].InnerXml;
+                                aceptados_str = aceptados[0].InnerXml;
+                                rechazados_str = rechazados[0].InnerXml;
+                                reparos_str = reparos[0].InnerXml;
+                                consumo_folio_str = "0";
+                            }
+
+
+
+                        }
+
+
+                        //SI HAY UN RECHAZADO MANDAR MENSAJE DE ERROR
+                        if (rechazados_str != "0") //Si es distinto a 0 es porque hay rechazo
+                        {
+
+                            //UPDATE EL SOBRE RECHAZADO CON EL ESTADO "RECHAZADO"
+                            string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado', rechazos_envio_dte = '1', informados_envio_dte = '1', revision_envio_dte = '1', detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                            conexion.Consulta(queryUpdateEstado);
+
+                            //CREAMOS LA RESPUESTA DEL RECHAZO
+                            string respuesta = "Error: Sobre de envio trackID: " + TrackId_str + ", fue rechazado";
+                            conexion.Consulta("INSERT INTO log_event (id_log_event, mensaje_log_event, fecha_log_event, referencia_log_event, query_request_log_event) VALUES (NULL, '" + respuesta + "', NOW(), 'TrackID: " + TrackId_str + " Aplicacion de Servicio ASConsultaEstadoEnvio', '') ");
+                            //mandarEmailSobre(TrackId_str, "Rechazo DTE", detalle_str);
+                            return respuesta;
+                        }
+
+                        //SI HAY UN REPARO, INFORMAR
+                        if (reparos_str != "0") //Si es distinto a 0 es porque hay reparo
+                        {
+                            //UPDATE EL SOBRE RECHAZADO CON EL ESTADO "RECHAZADO"
+                            string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado', reparos_envio_dte = '1', informados_envio_dte = '1', revision_envio_dte = '1', detalle_envio_dte = '" + detalle_str + "'   WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                            conexion.Consulta(queryUpdateEstado);
+
+                            //CREAMOS LA RESPUESTA DEL RECHAZO
+                            string respuesta = "Advertencia: Sobre de envio trackID: " + TrackId_str + ", fue enviado con reparo";
+                            conexion.Consulta("INSERT INTO log_event (id_log_event, mensaje_log_event, fecha_log_event, referencia_log_event, query_request_log_event) VALUES (NULL, '" + respuesta + "', NOW(), 'TrackID: " + TrackId_str + " Aplicacion de Servicio ASConsultaEstadoEnvio', '') ");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            //mandarEmailSobre(TrackId_str, "Reparo DTE", detalle_str);
+                            return respuesta;
+                        }
+
+                        if (aceptados_str != "0")
+                        {
+                            //XML ACEPTADO MANDAR MENSAJE DE EXITO
+                            //UPDATE EL SOBRE RECHAZADO CON EL ESTADO "RECHAZADO"
+                            string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado', aceptados_envio_dte = '1', informados_envio_dte = '1', revision_envio_dte = '1',detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                            conexion.Consulta(queryUpdateEstado);
+                            string respuesta = "Aceptado: Sobre de envio trackID: " + TrackId_str + "";
+                            return respuesta;
+
+
+                        }
+
+                        if (consumo_folio_str != "0")
+                        {
+                            string queryUpdateEstado = "UPDATE envio_dte SET  estado_envio_dte = 'Enviado', aceptados_envio_dte = '1', informados_envio_dte = '1',envio_cliente_envio_dte = '2', revision_envio_dte = '1',detalle_envio_dte = '" + detalle_str + "'  WHERE trackid_envio_dte = '" + TrackId_str + "';";
+                            conexion.Consulta(queryUpdateEstado);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                   string respuesta = "HUBO ERROR EN UpdateEstadoSobre() :" + ex.Message;
+                    return respuesta;
+
+                }
+            }
+            else
+            {
+                string respuesta = "HUBO ERROR CON EL TRACKID UpdateEstadoSobre() :" + TrackId_str;
+            }
+
+            return "NO ES UN TRACK ID VALIDO";
+        }
 
 
 

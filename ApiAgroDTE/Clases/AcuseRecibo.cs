@@ -537,6 +537,7 @@ namespace ApiAgroDTE.Clases
                
 
                 string log_envio_sobre_cliente = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Envio XML a cliente rut: "+ rutDestino + " correo: "+ strCorreoDestino + " archivo XML: "+ EnvioAcuseDTE_xml + " Folio: "+folio+"',NOW(),'Envio XML cliente','')";
+                log_envio_sobre_cliente = log_envio_sobre_cliente.Replace("\\", "\\\\");
                 conexion.Consulta(log_envio_sobre_cliente);
             }
 
@@ -544,12 +545,16 @@ namespace ApiAgroDTE.Clases
             {
                 mySmtpClient.Dispose();
                 string log_envio_sobre_cliente = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('ERROR Envio XML a cliente MOTIVO ERROR: "+ ex.Message + " rut: " + rutDestino + " correo: " + strCorreoDestino + " archivo XML: " + EnvioAcuseDTE_xml + " Folio: " + folio + "',NOW(),'ERROR Envio XML cliente','')";
+                log_envio_sobre_cliente = log_envio_sobre_cliente.Replace("\\", "\\\\");
                 conexion.Consulta(log_envio_sobre_cliente);
                 return "SmtpException has occured: " + ex.Message;
             }
             catch (Exception ex)
             {
                 mySmtpClient.Dispose();
+                string log_envio_sobre_cliente = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('ERROR Envio XML a cliente MOTIVO ERROR: " + ex.Message + " rut: " + rutDestino + " correo: " + strCorreoDestino + " archivo XML: " + EnvioAcuseDTE_xml + " Folio: " + folio + "',NOW(),'ERROR Envio XML cliente','')";
+                log_envio_sobre_cliente = log_envio_sobre_cliente.Replace("\\", "\\\\");
+                conexion.Consulta(log_envio_sobre_cliente);
                 return ex.Message;
             }
 
