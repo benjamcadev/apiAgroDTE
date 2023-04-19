@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Xml;
@@ -14,7 +15,10 @@ namespace ApiAgroDTE.Clases
 
         ConexionBD conexion = new ConexionBD();
 
-        string nombrecertificado = "RUBEN SALATIEL RIVERA GALLEGUILLOS";
+        //TRAER EL NOMBRE DEL CERTIFICADO ACTIVO
+        List<string> respuesta_nombre_certificado = conexion.Select("SELECT nombre_certificado FROM certificado WHERE estado_certificado = 1");
+        string nombrecertificado = respuesta_nombre_certificado[0];
+        //string nombrecertificado = "RUBEN SALATIEL RIVERA GALLEGUILLOS";
         string xmlparafirmar = oDocument.OuterXml;
 
         string ID_xml = "#" + T33F;
@@ -53,9 +57,13 @@ namespace ApiAgroDTE.Clases
             X509Certificate2 certificado = new X509Certificate2();
             try
             {
+                ConexionBD conexion = new ConexionBD();
+                List<string> respuesta_datos_certificado = conexion.Select("SELECT archivo_certificado,pass_certificado FROM certificado WHERE estado_certificado = 1");
 
-                string certPath = @"..\AgroDTE_Archivos\Certificado\firma_6402678K.pfx";
-                string certPass = "agro1113";
+                string certPath = @"..\AgroDTE_Archivos\Certificado\"+ respuesta_datos_certificado[0];
+                //string certPath = @"..\AgroDTE_Archivos\Certificado\firma_6402678K.pfx";
+                string certPass = respuesta_datos_certificado[1];
+                //string certPass = "agro1113";
 
                 // Create a collection object and populate it using the PFX file
                 X509Certificate2Collection Certificados3 = new X509Certificate2Collection();

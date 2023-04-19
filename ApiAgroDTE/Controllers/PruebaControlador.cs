@@ -290,8 +290,7 @@ namespace ApiAgroDTE.Controllers
                 Byte[] bytes = Convert.FromBase64String(base64ListSplit[1]);
 
                 
-               
-
+                // ESTO SERVIA PARA SUBIR ARCHIVO XML SOLAMENTE
                /* XmlDocument xml_file = new XmlDocument();
                 string xml = Encoding.UTF8.GetString(bytes);
                 xml_file.LoadXml(xml);
@@ -1886,7 +1885,8 @@ namespace ApiAgroDTE.Controllers
                                         }*/
 
 
-                                        string log_Response = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Response Sin Conexion',NOW(),'- ','" + respuesta.Content + "')";
+                                        //string log_Response = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Response Sin Conexion',NOW(),'- ','" + respuesta.Content + "')";
+                                        string log_Response = "INSERT INTO log_event (mensaje_log_event, fecha_log_event, referencia_log_event,query_request_log_event) VALUES ('Response Sin Conexion',NOW(),'- ','Sin data por rendimiento')";
                                         conexion.Consulta(log_Response);
 
                                         return respuesta;
