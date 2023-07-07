@@ -368,7 +368,7 @@ namespace ApiAgroDTE.Clases
                 header2 = "VENTA AL POR MAYOR NO ESPECIALIZADA";
                 header3 = "VICENTE ZORRILLA #835, LA SERENA";
                 header4 = "(51) 2222189 - (51) 2221421";
-                header5 = "AGROPLASTIC@TIE.CL";
+                header5 = "GERENCIA@AGROPLASTIC.CL";
 
                 if (cmnaOrigenList.Count != 0)
                 {
@@ -866,6 +866,7 @@ namespace ApiAgroDTE.Clases
 
             XmlNodeList Detalle = documentoXml.GetElementsByTagName("Detalle");           
             XmlNodeList NmbItem = documentoXml.GetElementsByTagName("NmbItem");
+            XmlNodeList DscItem = documentoXml.GetElementsByTagName("DscItem");
             XmlNodeList QtyItem = documentoXml.GetElementsByTagName("QtyItem");
             XmlNodeList PrcItem = documentoXml.GetElementsByTagName("PrcItem");            
             XmlNodeList MontoItem = documentoXml.GetElementsByTagName("MontoItem");            
@@ -874,6 +875,7 @@ namespace ApiAgroDTE.Clases
             List<int> listaRecargos = new List<int>();
             string precioItem = "--";
             string cantidadItem = "--";
+            string descripcionItem = "";
 
             for (int i = 0; i < Detalle.Count; i++)
             {
@@ -916,6 +918,13 @@ namespace ApiAgroDTE.Clases
                         precioItem = String.Format("{0:C}", double.Parse(PrcItem[i].InnerText));
                     }
                    
+                }
+
+                // AVECES NO VIENE LA DESCRIPCION DEL ITEM (NOTAS DE CREDITO O DEBITO)
+                if (DscItem.Count != 0)
+                {
+                    
+                   descripcionItem = DscItem[i].InnerXml;//<<<<<<<<<<<<<<<<<<<<<<<<opcional
                 }
 
                 // AVECES NO VIENE LA CANTIDAD DEL ITEM (NOTAS DE CREDITO O DEBITO)
@@ -988,7 +997,9 @@ namespace ApiAgroDTE.Clases
                     strDRItem = strDescuento;
                 }
 
-                PdfPCell celdaNmbItem = new PdfPCell(new Phrase(NmbItem[i].InnerXml, _fuenteBlack));
+                string nombreDescripcion = NmbItem[i].InnerXml + " " + descripcionItem; //Juntando nombre y descripcion adicional del item
+
+                PdfPCell celdaNmbItem = new PdfPCell(new Phrase(nombreDescripcion, _fuenteBlack)); 
                 PdfPCell celdaQtyItem = new PdfPCell(new Phrase(cantidadItem, _fuenteBlack));
                 PdfPCell celdaPrcItem = new PdfPCell(new Phrase(precioItem, _fuenteBlack));
                 PdfPCell celdaMontoItem = new PdfPCell(new Phrase(subTotal, _fuenteBlack));

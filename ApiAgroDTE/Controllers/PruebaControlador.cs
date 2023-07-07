@@ -34,12 +34,12 @@ namespace ApiAgroDTE.Controllers
        */
 
 
-        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
        
-        [HttpGet("api/dte/taxpayer/{rut}")]
+        [HttpGet("api/dte/taxpayer/{rut}")] //DOCUMENTADO
         public ContentResult datosCliente(string rut)
         {
 
@@ -207,7 +207,7 @@ namespace ApiAgroDTE.Controllers
 
             return respuesta;
         }
-        [HttpPost("api/dte/document/estadosobre")]
+        [HttpPost("api/dte/document/estadosobre")] //DOCUMENTADO
         public ContentResult estadoSobre([FromBody] JsonElement values)
         {
             //FUNCION PARA CONSULTAR EL ESTADO DEL SOBRE/DTE EN EL SII
@@ -256,7 +256,7 @@ namespace ApiAgroDTE.Controllers
 
         }
 
-            [HttpPost("api/dte/cargarArchivo")]
+            [HttpPost("api/dte/cargarArchivo")] //DOCUMENTADO
         public ContentResult cargarArchivo([FromBody] JsonElement values)
         {
             //CREAR RESPUESTA
@@ -324,7 +324,7 @@ namespace ApiAgroDTE.Controllers
         }
 
 
-            [HttpPost("api/dte/EmitirAcuseRecibo")]
+            [HttpPost("api/dte/EmitirAcuseRecibo")] //DOCUMENTADO
         public ContentResult crearAcuseRecibo([FromBody] JsonElement values)
         {
             /*{
@@ -409,23 +409,8 @@ namespace ApiAgroDTE.Controllers
 
         }
 
-        [HttpPost("api/dte/document/crearDTEfront")]
-        public ContentResult crearDTEfront([FromBody] JsonElement values)
-        {
-            ContentResult respuesta = new ContentResult();
-            string JsonResponse = "";
 
-           //4 JsonResponse = @"{""statusCode"": 200,""pdf_base64"": """ + pdf_base64 + @""", ""tipo_dte"": """ + tipo_dte_str + @"""}";
-            respuesta.Content = JsonResponse;
-            respuesta.ContentType = "application/json";
-            respuesta.StatusCode = 200;
-
-            return respuesta;
-
-        }
-
-
-            [HttpPost("api/dte/document/crearPDF")]
+            [HttpPost("api/dte/document/crearPDF")] //DOCUMENTADO
         public ContentResult crearPdfDTE([FromBody] JsonElement values)
         {
             ContentResult respuesta = new ContentResult();
@@ -492,7 +477,8 @@ namespace ApiAgroDTE.Controllers
 
             return respuesta;
         }
-        [HttpPost("api/dte/document/envioboleta")]
+
+        [HttpPost("api/dte/document/envioboleta")]// DOCUMENTADO
         public ContentResult pruebaPost([FromBody] JsonElement values)
         {
             ContentResult respuesta = new ContentResult();
@@ -558,7 +544,7 @@ namespace ApiAgroDTE.Controllers
                 }
                 else
                 {
-                    JsonResponse = @"{ ""Error"" : ""error: """ + respuestaEnvio + "}";
+                    JsonResponse = @"{ ""Error"" : ""error: """ + respuestaEnvio + @"""}";
                     respuesta.Content = JsonResponse;
                     respuesta.ContentType = "application/json";
                     respuesta.StatusCode = 400;
@@ -580,7 +566,7 @@ namespace ApiAgroDTE.Controllers
            
            
         }
-        [HttpPost("api/dte/document/enviocliente")]
+        [HttpPost("api/dte/document/enviocliente")] //DOCUMENTADO
         public ContentResult enviarSobreCliente([FromBody] JsonElement values)
         {
             /*
@@ -641,7 +627,7 @@ namespace ApiAgroDTE.Controllers
             return respuesta;
         }
 
-        [HttpGet("api/dte/document/{token}/{value}")]
+        [HttpGet("api/dte/document/{token}/{value}")] //DOCUMENTADO
         public ContentResult verificarDTE(string token,string value, [FromHeader(Name = "apikey")] string valuesHeader)
         {
             ContentResult respuesta = new ContentResult();
@@ -733,96 +719,8 @@ namespace ApiAgroDTE.Controllers
 
         }
 
-        // public static bool getEstadoRequest()
-        //{
 
-        //    //CREAR EL ARCHIVO TXT DE COLA SI NO EXISTE
-        //    string fileColaRequest = Environment.CurrentDirectory + "\\colaRequest.txt"; //NOMBRE DEL ARCHIVO TXT
-
-        //    var respuestaCola = System.IO.File.Exists(fileColaRequest);
-
-        //    if (respuestaCola)
-        //    {
-        //        //EXISTE ARCHIVO DE COLA REQUEST
-        //        using (var reader = new StreamReader(fileColaRequest))
-        //        {
-        //            string line;
-        //            while ((line = reader.ReadLine()) != null)
-        //            {
-        //                if (line == "Procesando Request")
-        //                {
-        //                    //Console.WriteLine("Se esta procesando una request...");
-        //                    reader.Close();
-        //                    Thread.Sleep(5000); //ESTO SIMULA EL TIEMPO QUE ESPERA LA PETICION DE UNA REQUEST QUE ESTA EN COLA
-
-        //                    return false;
-        //                }
-
-        //                if (line == "Sin Request")
-        //                {
-
-        //                    reader.Close();
-        //                    //ESTO SIMULA EL CAMBIO DE ESTADO DE UNA REQUEST
-        //                    using (StreamWriter writetext = new StreamWriter(fileColaRequest))
-        //                    {
-        //                        writetext.WriteLine("Procesando Request");
-        //                        writetext.Close();
-        //                    }
-
-
-
-
-        //                    Thread.Sleep(8000); //ESTO SIMULA LO QUE SE DEMORA UNA FACTURA O BOLETA
-        //                    //Console.WriteLine("No hay request procesando...");
-        //                    reader.Close();
-
-
-
-        //                    //ESTO SIMULA EL CAMBIO DE ESTADO DE UNA REQUEST
-        //                    using (StreamWriter writetext = new StreamWriter(fileColaRequest))
-        //                    {
-        //                        writetext.WriteLine("Sin Request");
-        //                        writetext.Close();
-        //                    }
-
-
-        //                    return true;
-        //                }
-
-
-        //            }
-        //        }
-        //        Console.WriteLine("Existe archivo");
-        //    }
-        //    else
-        //    {
-        //        //NO EXISTE ARCHIVO COLA REQUEST, SE CREA...
-        //        using (StreamWriter writetext = new StreamWriter(fileColaRequest))
-        //        {
-        //            writetext.WriteLine("Procesando Request");
-        //            writetext.Close();
-        //        }
-
-        //        Thread.Sleep(8000); //ESTO SIMULA LO QUE SE DEMORA UNA FACTURA O BOLETA
-        //                            //Console.WriteLine("No hay request procesando...");
-
-
-
-        //        //ESTO SIMULA EL CAMBIO DE ESTADO DE UNA REQUEST
-        //        using (StreamWriter writetext = new StreamWriter(fileColaRequest))
-        //        {
-        //            writetext.WriteLine("Sin Request");
-        //            writetext.Close();
-        //        }
-
-        //        //Console.WriteLine("No existe archivo creando...");
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
-
-        [HttpPost("api/dte/document")]
+        [HttpPost("api/dte/document")] //DOCUMENTADO
         public ContentResult crearDTE([FromBody] JsonElement values, [FromHeader(Name = "apikey")] string valuesHeader)
         {
             ContentResult respuesta = new ContentResult();
@@ -1021,8 +919,8 @@ namespace ApiAgroDTE.Controllers
                                         {
 
                                             //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                            respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
-                                            //respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
+                                            //respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
+                                            respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
                                             // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
                                             //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
                                         }
