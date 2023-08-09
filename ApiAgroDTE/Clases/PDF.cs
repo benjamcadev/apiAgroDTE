@@ -876,6 +876,7 @@ namespace ApiAgroDTE.Clases
             string precioItem = "--";
             string cantidadItem = "--";
             string descripcionItem = "";
+            string strPrecioItem = "";
 
             for (int i = 0; i < Detalle.Count; i++)
             {
@@ -886,36 +887,23 @@ namespace ApiAgroDTE.Clases
                 if (PrcItem.Count != 0)
                 {
                     //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N 
-                   /* string precioItemTemp = PrcItem[i].InnerXml.ToString();
-                    precioItemTemp = precioItemTemp.Replace('.',',');
-                    double precioItemDoubleTemp = double.Parse(precioItemTemp);*/
+                     string precioItemTemp = PrcItem[i].InnerXml.ToString();
+                     precioItemTemp = precioItemTemp.Replace('.',',');
+                     precioItem = double.Parse(precioItemTemp).ToString();
 
-                   /* using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\variable_precioItemTemp.txt"))
-                    {
-                        writetext.WriteLine(precioItem);
-                    }*/
-
-
-
-                    precioItem = decimal.Parse(PrcItem[i].InnerXml, cultureUS).ToString("N");
-
-
-                   /* using (StreamWriter writetext = new StreamWriter(@"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos\Log\variable_precioItem.txt"))
-                    {
-                        writetext.WriteLine(precioItem);
-                    }*/
-
-                    double numEnero = double.Parse(precioItem.Split(',')[0]);
-                    double numDecimal = double.Parse(precioItem.Split(',')[1]);
+                   
+       
+                   // double numEnero = double.Parse(precioItem.Split(',')[0]);
+                    //double numDecimal = double.Parse(precioItem.Split(',')[1]);
                     
                     // SI EL DECIMAL ES 0, ENTONCES LO OMITE
-                    if (numDecimal != 0)
+                    if (precioItem.Contains(","))
                     {
-                        precioItem = "$" + decimal.Parse(PrcItem[i].InnerXml, cultureUS).ToString("N");
+                        precioItem = "$" + decimal.Parse(precioItem).ToString("N");
                     }
                     else
                     {                      
-                        precioItem = String.Format("{0:C}", double.Parse(PrcItem[i].InnerText));
+                        precioItem = String.Format("{0:C}", double.Parse(precioItem));
                     }
                    
                 }

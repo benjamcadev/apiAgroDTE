@@ -34,8 +34,8 @@ namespace ApiAgroDTE.Controllers
        */
 
 
-        public static string servidor_boletas = "apicert"; //api: produccion --  apicert: certificacion
-        public static string servidor_facturas = "maullin"; //maullin: certificacion -- palena: produccion
+        public static string servidor_boletas = "api"; //api: produccion --  apicert: certificacion
+        public static string servidor_facturas = "palena"; //maullin: certificacion -- palena: produccion
         public static string directorio_archivos = @"C:\inetpub\wwwroot\api_agrodte\AgroDTE_Archivos";
 
        
@@ -919,8 +919,8 @@ namespace ApiAgroDTE.Controllers
                                         {
 
                                             //CHEQUEAR SI HAY CONEXION A INTERNET 
-                                            //respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
-                                            respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
+                                            respuestaPing = checkPing("palena.sii.cl"); //PRODUCCION
+                                            //respuestaPing = checkPing("maullin.sii.cl"); //CERTIFICACION
                                             // ----DESCONTINUADO ----string respuestaConexion = checkConnection("https://palena.sii.cl/DTEWS/CrSeed.jws"); //PRODUCCION
                                             //-----DESCONTINUADO-----string respuestaConexion = checkConnection("https://maullin.sii.cl/DTEWS/CrSeed.jws"); //CERTIFICACION
                                         }
