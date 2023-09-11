@@ -299,7 +299,7 @@ namespace ApiAgroDTE.Clases
             //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-------------------INICIO----------------------->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
              ConexionBD conexion = new ConexionBD();
 
-            string quieroVerLaWea = "";
+            
             //COLORES BASE NUEVOS
             var FontColourAzul1 = new BaseColor(32, 67, 138);
             var FontColourAzul2 = new BaseColor(93, 127, 175);
@@ -866,20 +866,21 @@ namespace ApiAgroDTE.Clases
 
             XmlNodeList Detalle = documentoXml.GetElementsByTagName("Detalle");           
             XmlNodeList NmbItem = documentoXml.GetElementsByTagName("NmbItem");
-            XmlNodeList DscItem = documentoXml.GetElementsByTagName("DscItem");
             XmlNodeList QtyItem = documentoXml.GetElementsByTagName("QtyItem");
             XmlNodeList PrcItem = documentoXml.GetElementsByTagName("PrcItem");            
             XmlNodeList MontoItem = documentoXml.GetElementsByTagName("MontoItem");            
 
             List<int> listaDescuentos = new List<int>();
             List<int> listaRecargos = new List<int>();
-            string precioItem = "--";
-            string cantidadItem = "--";
-            string descripcionItem = "";
-            string strPrecioItem = "";
+            
 
             for (int i = 0; i < Detalle.Count; i++)
             {
+                string precioItem = "--";
+                string cantidadItem = "--";
+                string descripcionItem = "";
+                string strPrecioItem = "";
+
                 var nodosDetalle = Detalle.Item(i).ChildNodes;
                 
                 //DEFINIMOS LA CULTURA EN LA QUE VIENE EL DATO
@@ -891,11 +892,6 @@ namespace ApiAgroDTE.Clases
                      precioItemTemp = precioItemTemp.Replace('.',',');
                      precioItem = double.Parse(precioItemTemp).ToString();
 
-                   
-       
-                   // double numEnero = double.Parse(precioItem.Split(',')[0]);
-                    //double numDecimal = double.Parse(precioItem.Split(',')[1]);
-                    
                     // SI EL DECIMAL ES 0, ENTONCES LO OMITE
                     if (precioItem.Contains(","))
                     {
@@ -909,17 +905,25 @@ namespace ApiAgroDTE.Clases
                 }
 
                 // AVECES NO VIENE LA DESCRIPCION DEL ITEM (NOTAS DE CREDITO O DEBITO)
-                if (DscItem.Count != 0)
+                for (int o = 0; o < nodosDetalle.Count; o++)
                 {
-                    
-                   descripcionItem = DscItem[i].InnerXml;//<<<<<<<<<<<<<<<<<<<<<<<<opcional
+                    if (nodosDetalle.Item(o).Name == "DscItem")
+                    {
+                        descripcionItem = nodosDetalle.Item(o).InnerText;//<<<<<<<<<<<<<<<<<<<<<<<<opcional
+                    }
                 }
+
 
                 // AVECES NO VIENE LA CANTIDAD DEL ITEM (NOTAS DE CREDITO O DEBITO)
                 if (QtyItem.Count != 0)
                 {
+                    //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N 
+                    string cantidadItemTemp = QtyItem[i].InnerXml.ToString();
+                    cantidadItemTemp = cantidadItemTemp.Replace('.', ',');
+                    cantidadItem = double.Parse(cantidadItemTemp).ToString();
+
                     //PARSEAMOS A DECIMAL CON LOS DECIMALES EN US, Y CONVERTIMOS A STRING CON SEPARADOR DE MILES N
-                    cantidadItem = QtyItem[i].InnerXml;//<<<<<<<<<<<<<<<<<<<<<<<<opcional
+                    //cantidadItem = QtyItem[i].InnerXml;//<<<<<<<<<<<<<<<<<<<<<<<<opcional
                 }
 
                 string subTotal = String.Format("{0:C}", double.Parse(MontoItem[i].InnerXml));// FORMATO MONEDA SIN DECIMALES
